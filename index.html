@@ -3,266 +3,294 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎨 로스코 치유 — Mark Rothko Healing</title>
+<title>색 앞에 서다 — Mark Rothko</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Nanum+Myeongjo:wght@400;700&display=swap" rel="stylesheet">
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, 'Apple SD Gothic Neo', 'Segoe UI', sans-serif; background: #0f0f1a; color: #eee; min-height: 100vh; }
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0807;--ink:#e8e2d8;--ink-dim:#8a8278;--ink-faint:#4a443c;--rust:#8b3a2f;--ochre:#c2832a;--plum:#4a1f2a;--slate:#2a2e35;--bone:#d4c8a8;--crimson:#6b1e1a}
+html,body{background:var(--bg);color:var(--ink);font-family:'Cormorant Garamond','Nanum Myeongjo',serif;overflow-x:hidden;min-height:100vh;-webkit-font-smoothing:antialiased}
+body{background:radial-gradient(ellipse at 50% 0%,rgba(139,58,47,.08) 0%,transparent 50%),radial-gradient(ellipse at 30% 100%,rgba(74,31,42,.1) 0%,transparent 60%),var(--bg)}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:100;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
+.scene{min-height:100vh;display:none;align-items:center;justify-content:center;padding:2rem;position:relative;animation:fadeIn 1.6s ease-out}
+.scene.active{display:flex}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
 
-/* Nav */
-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(15,15,26,0.95); backdrop-filter: blur(10px); display: flex; justify-content: center; gap: 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
-nav button { background: none; border: none; color: #888; font-size: 0.95em; padding: 14px 24px; cursor: pointer; transition: all 0.3s; font-family: inherit; }
-nav button.active { color: #ffc947; border-bottom: 2px solid #ffc947; }
-nav button:hover { color: #eee; }
+/* === SCENE 1: ENTRY === */
+#scene1{flex-direction:column;text-align:center}
+.title-mark{font-style:italic;font-weight:300;font-size:clamp(.75rem,1.2vw,.95rem);letter-spacing:.4em;color:var(--ink-dim);text-transform:uppercase;margin-bottom:4rem;opacity:0;animation:rise 2s ease-out .3s forwards}
+.entry-quote{font-style:italic;font-weight:300;font-size:clamp(1.5rem,3.5vw,2.6rem);line-height:1.5;max-width:780px;color:var(--ink);opacity:0;animation:rise 3s ease-out 1.2s forwards}
+.entry-attr{font-size:.85rem;letter-spacing:.3em;color:var(--ink-faint);margin-top:3rem;text-transform:uppercase;opacity:0;animation:rise 2s ease-out 3s forwards}
+.entry-btns{display:flex;gap:2rem;margin-top:4rem;opacity:0;animation:rise 2s ease-out 4s forwards;flex-wrap:wrap;justify-content:center}
+.entry-btn{background:transparent;border:1px solid var(--ink-faint);color:var(--ink-dim);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.9rem;letter-spacing:.25em;padding:1rem 2.5rem;cursor:pointer;text-transform:uppercase;transition:all .6s}
+.entry-btn:hover{border-color:var(--ink);color:var(--ink)}
+.enter-prompt{position:absolute;bottom:3rem;left:50%;transform:translateX(-50%);font-size:.75rem;letter-spacing:.5em;color:var(--ink-faint);text-transform:uppercase;cursor:pointer;padding:1rem 2rem;transition:color 1.2s;opacity:0;animation:rise 2s ease-out 4.5s forwards,pulse 3s ease-in-out 6.5s infinite}
+.enter-prompt:hover{color:var(--ink)}
 
-/* Tab content */
-.tab { display: none; padding: 70px 20px 40px; max-width: 600px; margin: 0 auto; min-height: 100vh; }
-.tab.active { display: block; }
+/* === SCENE 2: HISTORY === */
+#scene2{flex-direction:column;padding:4rem 2rem;max-width:700px;margin:0 auto}
+.history-back{position:fixed;top:2rem;left:2rem;font-style:italic;font-size:.85rem;letter-spacing:.2em;color:var(--ink-faint);cursor:pointer;z-index:10;transition:color .6s}
+.history-back:hover{color:var(--ink)}
+.history-title{font-style:italic;font-weight:300;font-size:clamp(1.8rem,4vw,2.8rem);text-align:center;margin-bottom:1rem;opacity:0;animation:rise 1.5s ease-out .3s forwards}
+.history-sub{font-style:italic;font-size:1rem;color:var(--ink-dim);text-align:center;margin-bottom:4rem;opacity:0;animation:rise 1.5s ease-out .8s forwards}
+.timeline{position:relative;padding-left:32px}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:rgba(255,201,71,.2)}
+.tl-item{position:relative;margin-bottom:2.5rem;background:rgba(255,255,255,.03);border-radius:12px;padding:20px 24px;opacity:0;animation:rise 1.2s ease-out forwards}
+.tl-item:nth-child(1){animation-delay:1s}
+.tl-item:nth-child(2){animation-delay:1.4s}
+.tl-item:nth-child(3){animation-delay:1.8s}
+.tl-item:nth-child(4){animation-delay:2.2s}
+.tl-item:nth-child(5){animation-delay:2.6s}
+.tl-item::before{content:'';position:absolute;left:-28px;top:24px;width:10px;height:10px;border-radius:50%;background:var(--ochre)}
+.tl-item.star{border-left:3px solid var(--rust)}
+.tl-item.star::before{background:var(--rust)}
+.tl-year{font-size:.8rem;letter-spacing:.3em;color:var(--ochre);text-transform:uppercase;margin-bottom:.5rem}
+.tl-item.star .tl-year{color:var(--rust)}
+.tl-heading{font-size:1.15rem;font-weight:500;margin-bottom:.5rem}
+.tl-body{font-family:'Nanum Myeongjo',serif;font-size:.9rem;line-height:1.9;color:var(--ink-dim)}
+.tl-quote{font-style:italic;color:var(--rust);margin-top:.5rem;font-size:.88rem}
+.history-to-exp{display:block;width:fit-content;margin:3rem auto 0;background:transparent;border:1px solid var(--ink-faint);color:var(--ink-dim);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.9rem;letter-spacing:.25em;padding:1rem 2.5rem;cursor:pointer;text-transform:uppercase;transition:all .6s;opacity:0;animation:rise 1.5s ease-out 3s forwards}
+.history-to-exp:hover{border-color:var(--ink);color:var(--ink)}
 
-/* History Tab */
-.history-hero { text-align: center; padding: 30px 0 20px; }
-.history-hero h1 { font-size: 1.8em; margin-bottom: 6px; }
-.history-hero .tagline { color: #e94560; font-style: italic; font-size: 0.95em; }
-.timeline { position: relative; padding-left: 28px; }
-.timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: rgba(255,201,71,0.3); }
-.tl-item { position: relative; margin-bottom: 24px; background: rgba(255,255,255,0.05); border-radius: 12px; padding: 16px 18px; }
-.tl-item::before { content: ''; position: absolute; left: -24px; top: 20px; width: 10px; height: 10px; border-radius: 50%; background: #ffc947; }
-.tl-item h3 { color: #ffc947; font-size: 1em; margin-bottom: 6px; }
-.tl-item p { font-size: 0.9em; line-height: 1.7; color: #ccc; }
-.tl-item.star { border-left: 3px solid #e94560; }
-.tl-item .quote { font-style: italic; color: #e94560; margin-top: 8px; font-size: 0.88em; }
+/* === SCENE 3: COLOR SELECT === */
+#scene3{flex-direction:column}
+.scene-label{position:absolute;top:3rem;left:50%;transform:translateX(-50%);font-style:italic;font-size:1.1rem;color:var(--ink-dim);letter-spacing:.15em;text-align:center;width:90%}
+.color-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:900px;width:100%;padding:2rem}
+.color-tile{aspect-ratio:4/5;cursor:pointer;position:relative;transition:transform 1s cubic-bezier(.16,1,.3,1);overflow:hidden}
+.color-tile:hover{transform:scale(1.03)}
+.color-tile::after{content:'';position:absolute;inset:0;box-shadow:inset 0 0 60px rgba(0,0,0,.4);transition:opacity .6s}
+.tile-1{background:linear-gradient(180deg,#c2832a 0%,#a86a1f 50%,#8b3a2f 100%)}
+.tile-2{background:linear-gradient(180deg,#6b1e1a 0%,#4a1419 50%,#1a0808 100%)}
+.tile-3{background:linear-gradient(180deg,#2a2e35 0%,#1a1c20 50%,#0a0b0d 100%)}
+.tile-4{background:linear-gradient(180deg,#d4c8a8 0%,#b8a888 50%,#8a7a5a 100%)}
+.tile-5{background:linear-gradient(180deg,#4a1f2a 0%,#2f1018 50%,#150508 100%)}
+.tile-6{background:linear-gradient(180deg,#1a3a4a 0%,#0f2530 50%,#050d12 100%)}
+.tile-emotion{position:absolute;bottom:1.5rem;left:1.5rem;font-family:'Nanum Myeongjo',serif;font-size:.95rem;color:rgba(255,250,240,.85);letter-spacing:.1em;text-shadow:0 2px 8px rgba(0,0,0,.6);opacity:0;transition:opacity .6s}
+.color-tile:hover .tile-emotion{opacity:1}
 
-/* Experience Tab */
-.exp-container { text-align: center; padding-top: 30px; }
-.exp-container h2 { font-size: 1.4em; margin-bottom: 8px; }
-.exp-subtitle { color: #999; font-size: 0.9em; margin-bottom: 30px; }
+/* === SCENE 4: IMMERSION === */
+#scene4{padding:0;flex-direction:column}
+.canvas-stage{width:100%;height:100vh;position:relative;display:flex;align-items:center;justify-content:center;transition:background 2.5s ease}
+.rothko-canvas{width:min(70vw,60vh);height:min(85vh,90vw);position:relative;box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 120px rgba(0,0,0,.4)}
+.field{position:absolute;left:5%;right:5%;filter:blur(1.5px)}
+.field-top{top:8%;height:38%}
+.field-bottom{top:52%;height:40%}
+.field::before{content:'';position:absolute;inset:-8px;filter:blur(12px);opacity:.6;background:inherit}
+.timer-ring{position:absolute;top:2.5rem;right:2.5rem;width:60px;height:60px;z-index:10}
+.timer-ring svg{transform:rotate(-90deg);width:100%;height:100%}
+.timer-ring circle{fill:none;stroke-width:1.5}
+.timer-bg{stroke:var(--ink-faint)}
+.timer-progress{stroke:var(--ink-dim);stroke-dasharray:169.6;stroke-dashoffset:169.6;transition:stroke-dashoffset .1s linear}
+.timer-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-style:italic;color:var(--ink-dim);font-size:1rem}
+.reflection-input{position:absolute;bottom:3rem;left:50%;transform:translateX(-50%);width:min(500px,80vw);background:transparent;border:none;border-bottom:1px solid var(--ink-faint);color:var(--ink);font-family:'Nanum Myeongjo',serif;font-size:1rem;text-align:center;padding:1rem 0;outline:none;transition:border-color .6s;opacity:0;animation:rise 1.5s ease-out 1s forwards}
+.reflection-input::placeholder{color:var(--ink-faint);font-style:italic}
+.reflection-input:focus{border-color:var(--ink-dim)}
+.whisper{position:absolute;top:4rem;left:4rem;max-width:280px;font-style:italic;font-size:.95rem;line-height:1.6;color:var(--ink-dim);opacity:0;transition:opacity 2s ease}
+.whisper.visible{opacity:.7}
+.next-prompt{position:absolute;bottom:8rem;left:50%;transform:translateX(-50%);font-size:.7rem;letter-spacing:.5em;color:var(--ink-faint);text-transform:uppercase;cursor:pointer;padding:.8rem 1.5rem;opacity:0;transition:color .6s,opacity 1s}
+.next-prompt.visible{opacity:1}
+.next-prompt:hover{color:var(--ink)}
 
-/* Color Picker */
-.color-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 320px; margin: 0 auto 30px; }
-.color-btn { aspect-ratio: 1; border-radius: 16px; border: 3px solid transparent; cursor: pointer; transition: all 0.3s; position: relative; }
-.color-btn:hover { transform: scale(1.08); }
-.color-btn.selected { border-color: #fff; box-shadow: 0 0 20px rgba(255,255,255,0.3); }
-.color-btn span { position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); font-size: 0.7em; color: rgba(255,255,255,0.8); text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+/* === SCENE 5: INSIGHT === */
+#scene5{flex-direction:column;padding:4rem 2rem}
+.insight-wrapper{max-width:640px;width:100%;text-align:center}
+.insight-label{font-style:italic;font-size:.85rem;letter-spacing:.4em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:3rem;opacity:0;animation:rise 1.5s ease-out .3s forwards}
+.insight-color{width:200px;height:240px;margin:0 auto 3rem;box-shadow:0 20px 60px rgba(0,0,0,.6);opacity:0;animation:rise 2s ease-out .8s forwards}
+.insight-color .field{filter:blur(1px)}
+.insight-text{font-style:italic;font-weight:300;font-size:clamp(1.4rem,2.8vw,2rem);line-height:1.6;color:var(--ink);margin-bottom:2rem;opacity:0;animation:rise 2s ease-out 1.6s forwards}
+.insight-rothko{font-family:'Nanum Myeongjo',serif;font-size:.95rem;line-height:1.9;color:var(--ink-dim);max-width:480px;margin:0 auto 2rem;opacity:0;animation:rise 2s ease-out 2.4s forwards}
+.insight-keyword{font-family:'Nanum Myeongjo',serif;font-size:.9rem;color:var(--ochre);margin-bottom:3rem;opacity:0;animation:rise 1.5s ease-out 2.8s forwards}
+.action-btns{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;opacity:0;animation:rise 2s ease-out 3s forwards}
+.action-btn{background:transparent;border:1px solid var(--ink-faint);color:var(--ink-dim);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.85rem;letter-spacing:.25em;padding:1rem 2.5rem;cursor:pointer;text-transform:uppercase;transition:all .6s}
+.action-btn:hover{border-color:var(--ink);color:var(--ink)}
+.copied-msg{font-size:.8rem;color:var(--ochre);margin-top:.5rem;opacity:0;transition:opacity .6s}
+.copied-msg.show{opacity:1}
 
-/* Rothko Canvas */
-.rothko-canvas { width: 100%; max-width: 400px; aspect-ratio: 3/4; margin: 0 auto 20px; border-radius: 4px; position: relative; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.4); display: none; }
-.rothko-layer { position: absolute; left: 8%; right: 8%; border-radius: 4px; opacity: 0; transition: opacity 2s ease; }
-.rothko-layer.visible { opacity: 1; }
+/* === SCENE 6: SHARE === */
+#scene6{flex-direction:column;text-align:center;padding:4rem 2rem}
+.share-title{font-style:italic;font-weight:300;font-size:clamp(1.5rem,3vw,2.2rem);margin-bottom:1rem;opacity:0;animation:rise 1.5s ease-out .3s forwards}
+.share-sub{font-family:'Nanum Myeongjo',serif;font-size:.95rem;line-height:1.8;color:var(--ink-dim);max-width:480px;margin:0 auto 3rem;opacity:0;animation:rise 1.5s ease-out .8s forwards}
+.share-quote{font-style:italic;font-size:1.1rem;color:var(--rust);margin-bottom:3rem;opacity:0;animation:rise 1.5s ease-out 1.2s forwards}
+.share-link-box{display:flex;gap:.5rem;justify-content:center;align-items:center;margin-bottom:2rem;opacity:0;animation:rise 1.5s ease-out 1.6s forwards}
+.share-link-input{background:rgba(255,255,255,.05);border:1px solid var(--ink-faint);color:var(--ink-dim);font-family:'Cormorant Garamond',serif;font-size:.85rem;padding:.7rem 1rem;width:min(400px,70vw);outline:none;border-radius:4px}
+.share-copy-btn{background:transparent;border:1px solid var(--ink-faint);color:var(--ink-dim);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.8rem;letter-spacing:.15em;padding:.7rem 1.5rem;cursor:pointer;transition:all .6s}
+.share-copy-btn:hover{border-color:var(--ink);color:var(--ink)}
+.share-back{margin-top:3rem;opacity:0;animation:rise 1.5s ease-out 2s forwards}
 
-/* Keyword Input */
-.keyword-section { max-width: 400px; margin: 0 auto; display: none; }
-.keyword-input { width: 100%; padding: 14px 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06); color: #eee; font-size: 1em; font-family: inherit; outline: none; transition: border 0.3s; }
-.keyword-input:focus { border-color: #ffc947; }
-.keyword-input::placeholder { color: #666; }
-.submit-btn { width: 100%; padding: 14px; margin-top: 12px; border-radius: 12px; border: none; background: linear-gradient(135deg, #e94560, #c23152); color: #fff; font-size: 1em; cursor: pointer; font-family: inherit; transition: transform 0.2s; }
-.submit-btn:hover { transform: scale(1.02); }
-
-/* Healing Message */
-.healing-msg { display: none; max-width: 400px; margin: 20px auto 0; background: rgba(255,255,255,0.06); border-radius: 16px; padding: 24px; text-align: left; }
-.healing-msg h3 { color: #ffc947; margin-bottom: 10px; }
-.healing-msg p { font-size: 0.92em; line-height: 1.8; color: #ccc; }
-
-/* Step indicator */
-.steps { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
-.step-dot { width: 8px; height: 8px; border-radius: 50%; background: #333; transition: background 0.3s; }
-.step-dot.active { background: #ffc947; }
-
-/* Share Tab */
-.share-container { text-align: center; padding-top: 40px; }
-.share-container h2 { font-size: 1.4em; margin-bottom: 16px; }
-.share-container p { color: #999; font-size: 0.9em; line-height: 1.7; max-width: 400px; margin: 0 auto 20px; }
-.share-btn { display: inline-block; padding: 12px 32px; border-radius: 12px; background: linear-gradient(135deg, #4fc3f7, #0288d1); color: #fff; text-decoration: none; font-size: 0.95em; }
-
-/* Fade-in animation */
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-.fade-in { animation: fadeIn 0.6s ease forwards; }
+@media(max-width:640px){
+  .color-grid{grid-template-columns:repeat(2,1fr);gap:1rem}
+  .whisper{display:none}
+  .timer-ring{top:1.5rem;right:1.5rem;width:48px;height:48px}
+  .history-back{top:1rem;left:1rem;font-size:.75rem}
+}
 </style>
 </head>
 <body>
 
-<nav>
-  <button class="active" onclick="showTab('history')">📖 히스토리</button>
-  <button onclick="showTab('experience')">🎨 Experience</button>
-  <button onclick="showTab('share')">✨ Share</button>
-</nav>
-
-<!-- HISTORY TAB -->
-<div id="tab-history" class="tab active">
-  <div class="history-hero">
-    <h1>🎨 마크 로스코</h1>
-    <p class="tagline">"나는 추상화가가 아니다. 기본 인간 감정을 표현할 뿐이다."</p>
+<!-- SCENE 1: ENTRY -->
+<section class="scene active" id="scene1">
+  <div class="title-mark">Mark Rothko · 1903–1970</div>
+  <div class="entry-quote">"나는 색이 아니라 비극, 황홀, 운명을 그린다."</div>
+  <div class="entry-attr">— Rothko, 1956</div>
+  <div class="entry-btns">
+    <button class="entry-btn" onclick="goToScene(2)">📖 로스코 이야기</button>
+    <button class="entry-btn" onclick="goToScene(3)">🎨 색 앞에 서기</button>
   </div>
+</section>
 
+<!-- SCENE 2: HISTORY -->
+<section class="scene" id="scene2">
+  <div class="history-back" onclick="goToScene(1)">← 처음으로</div>
+  <div class="history-title">마크 로스코</div>
+  <div class="history-sub">"색만으로 사람을 울린 화가"</div>
   <div class="timeline">
     <div class="tl-item">
-      <h3>1903 — 이민자 아이</h3>
-      <p>러시아(現 라트비아) 유대인 가정에서 태어남. 10세에 미국 오리건으로 이민. 예일 입학 후 2년 만에 자퇴.</p>
+      <div class="tl-year">1903 — 이민자 아이</div>
+      <div class="tl-heading">러시아(現 라트비아)에서 태어나 10세에 미국으로</div>
+      <div class="tl-body">유대인 가정에서 태어나, 10세에 오리건으로 이민. 예일 입학 후 2년 만에 자퇴하고 뉴욕에서 그림을 시작했다.</div>
     </div>
     <div class="tl-item">
-      <h3>1949 — "떠다니는 사각형" 탄생</h3>
-      <p>반투명 색면이 겹겹이 쌓인 구도 완성. 얼핏 단순하지만 시간이 지나면서 감정이 풀려나온다.</p>
-      <p class="quote">"그림은 즉각적이지 않다. 시간을 두고 펼쳐지도록 만들었다"</p>
+      <div class="tl-year">1949 — "떠다니는 사각형" 탄생</div>
+      <div class="tl-heading">반투명 색면이 겹겹이 쌓인 구도를 완성</div>
+      <div class="tl-body">얼핏 단순해 보이지만, 시간이 지나면서 감정이 풀려나온다.</div>
+      <div class="tl-quote">"그림은 즉각적이지 않다. 시간을 두고 펼쳐지도록 만들었다"</div>
     </div>
     <div class="tl-item star">
-      <h3>⭐ 1958~60 — 시즌그램 사건</h3>
-      <p>뉴욕 최고급 레스토랑 "Four Seasons" 벽화 의뢰 수주. 수개월간 벽화 7점 완성.</p>
-      <p>레스토랑 방문 후 깨달음: "부자들이 와인 마시며 장식품으로 볼 장소가 아니다"</p>
-      <p><strong>전액 환불 + 작품 회수</strong> → 9점을 런던 테이트 갤러리에 기증.</p>
-      <p class="quote">돈보다 감정, 상업보다 진정성을 선택한 사람.</p>
+      <div class="tl-year">⭐ 1958~60 — 시즌그램 사건</div>
+      <div class="tl-heading">거액의 의뢰를 돌려준 화가</div>
+      <div class="tl-body">뉴욕 최고급 레스토랑 "Four Seasons"에서 벽화 의뢰를 받아 수개월간 작업했다. 하지만 레스토랑을 직접 방문한 순간 깨달았다.</div>
+      <div class="tl-quote">"부자들이 와인 마시며 장식품으로 볼 장소가 아니다"</div>
+      <div class="tl-body" style="margin-top:.5rem"><strong>전액 환불 + 작품 회수</strong> → 9점을 런던 테이트 갤러리에 기증. 돈보다 감정, 상업보다 진정성을 선택한 사람.</div>
     </div>
     <div class="tl-item">
-      <h3>1964~71 — 로스코 채플</h3>
-      <p>휴스턴에 명상 공간으로 벽화 14점 제작. 거의 검정/보랏빛 — 영적 경험.</p>
-      <p>1970년 2월 25일 자살로 생 마감. 채플은 1971년 완공, 오늘날까지 치유 공간으로 운영.</p>
+      <div class="tl-year">1964~71 — 로스코 채플</div>
+      <div class="tl-heading">휴스턴에 명상 공간을 설계하다</div>
+      <div class="tl-body">거의 검정/보랏빛의 벽화 14점. 시각보다 영적 경험에 가까운 공간. 1970년 2월 25일 자살로 생을 마감했지만, 채플은 오늘날까지 전 세계인의 치유 공간으로 남아있다.</div>
+      <div class="tl-quote">"침묵이야말로 가장 정확하다. (Silence is so accurate.)"</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">왜 로스코인가</div>
+      <div class="tl-body">"기본 감정을 표현한다" → 색 선택 ↔ 감정 매핑<br>"시간이 지나야 펼쳐진다" → 천천히 생성되는 그림 경험<br>돈보다 진정성 → 상업 아닌 치유가 목적<br>어두운 색면도 위로가 된다 → 슬픔/고독도 치유의 재료</div>
     </div>
   </div>
+  <button class="history-to-exp" onclick="goToScene(3)">🎨 이제 색 앞에 서보세요</button>
+</section>
 
-  <div class="healing-msg" style="display:block; margin-top: 24px;">
-    <h3>💬 대표 명언</h3>
-    <p>"내 그림 앞에서 많은 사람들이 무너져 울었다는 건, 내가 그 감정을 전달했다는 증거다."</p>
-    <p style="margin-top:8px;">"침묵이야말로 가장 정확하다. (Silence is so accurate.)"</p>
+<!-- SCENE 3: COLOR SELECT -->
+<section class="scene" id="scene3">
+  <div class="scene-label">오늘 당신과 가장 닮은 색을 고르세요</div>
+  <div class="color-grid">
+    <div class="color-tile tile-1" onclick="selectColor('ochre')"><div class="tile-emotion">불타오름 · 갈망</div></div>
+    <div class="color-tile tile-2" onclick="selectColor('crimson')"><div class="tile-emotion">상실 · 그리움</div></div>
+    <div class="color-tile tile-3" onclick="selectColor('slate')"><div class="tile-emotion">무거움 · 침잠</div></div>
+    <div class="color-tile tile-4" onclick="selectColor('bone')"><div class="tile-emotion">텅 빔 · 정적</div></div>
+    <div class="color-tile tile-5" onclick="selectColor('plum')"><div class="tile-emotion">상처 · 견딤</div></div>
+    <div class="color-tile tile-6" onclick="selectColor('deep')"><div class="tile-emotion">깊음 · 응시</div></div>
   </div>
-</div>
+</section>
 
-<!-- EXPERIENCE TAB -->
-<div id="tab-experience" class="tab">
-  <div class="exp-container">
-    <div class="steps">
-      <div class="step-dot active" id="dot1"></div>
-      <div class="step-dot" id="dot2"></div>
-      <div class="step-dot" id="dot3"></div>
+<!-- SCENE 4: IMMERSION -->
+<section class="scene" id="scene4">
+  <div class="canvas-stage" id="canvasStage">
+    <div class="timer-ring">
+      <svg viewBox="0 0 60 60"><circle class="timer-bg" cx="30" cy="30" r="27"/><circle class="timer-progress" id="timerProgress" cx="30" cy="30" r="27"/></svg>
+      <div class="timer-text" id="timerText">15</div>
     </div>
-
-    <!-- Step 1: Color Selection -->
-    <div id="step1" class="fade-in">
-      <h2>지금, 당신의 감정은 어떤 샌가요?</h2>
-      <p class="exp-subtitle">끌리는 색을 하나 선택하세요</p>
-      <div class="color-grid">
-        <button class="color-btn" style="background:linear-gradient(135deg,#c62828,#e53935);" data-color="red" data-emotion="열정·분노" onclick="selectColor(this)"><span>열정</span></button>
-        <button class="color-btn" style="background:linear-gradient(135deg,#1565c0,#1e88e5);" data-color="blue" data-emotion="평온·외로움" onclick="selectColor(this)"><span>평온</span></button>
-        <button class="color-btn" style="background:linear-gradient(135deg,#e65100,#f57c00);" data-color="orange" data-emotion="따뜻함·그리움" onclick="selectColor(this)"><span>그리움</span></button>
-        <button class="color-btn" style="background:linear-gradient(135deg,#1a237e,#283593);" data-color="darkblue" data-emotion="깊은 슬픔·사색" onclick="selectColor(this)"><span>사색</span></button>
-        <button class="color-btn" style="background:linear-gradient(135deg,#2e7d32,#43a047);" data-color="green" data-emotion="희망·성장" onclick="selectColor(this)"><span>희망</span></button>
-        <button class="color-btn" style="background:linear-gradient(135deg,#4a148c,#6a1b9a);" data-color="purple" data-emotion="고독·명상" onclick="selectColor(this)"><span>명상</span></button>
-      </div>
+    <div class="whisper" id="whisper"></div>
+    <div class="rothko-canvas" id="rothkoCanvas">
+      <div class="field field-top" id="fieldTop"></div>
+      <div class="field field-bottom" id="fieldBottom"></div>
     </div>
+    <input type="text" class="reflection-input" id="reflection" placeholder="이 색 앞에서 떠오르는 한 단어를 적어보세요">
+    <div class="next-prompt" id="nextPrompt" onclick="goToScene(5)">통찰 보기</div>
+  </div>
+</section>
 
-    <!-- Step 2: Rothko Generation -->
-    <div id="step2" style="display:none;" class="fade-in">
-      <h2>당신의 감정이 펼쳐지고 있어요...</h2>
-      <p class="exp-subtitle">로스코처럼, 시간을 두고 바라보세요</p>
-      <div class="rothko-canvas" id="rothkoCanvas"></div>
-      <p id="emotionLabel" style="color:#ffc947; margin-top: 8px;"></p>
+<!-- SCENE 5: INSIGHT -->
+<section class="scene" id="scene5">
+  <div class="insight-wrapper">
+    <div class="insight-label">당신이 본 것</div>
+    <div class="insight-color" id="insightCanvas">
+      <div class="field field-top" id="insightTop"></div>
+      <div class="field field-bottom" id="insightBottom"></div>
     </div>
-
-    <!-- Step 3: Keyword → Healing -->
-    <div id="step3" class="fade-in" style="display:none;">
-      <h2>지금 느끼는 걸 한 단어로 적어주세요</h2>
-      <p class="exp-subtitle">로스코가 당신에게 맞춤 해설을 전합니다</p>
-      <div class="keyword-section" style="display:block;">
-        <input class="keyword-input" id="keywordInput" placeholder="예: 불안, 그리움, 기대, 고요..." maxlength="20">
-        <button class="submit-btn" onclick="generateHealing()">로스코의 위로 받기</button>
-      </div>
-      <div class="healing-msg" id="healingMsg">
-        <h3 id="healingTitle"></h3>
-        <p id="healingText"></p>
-      </div>
+    <div class="insight-text" id="insightText"></div>
+    <div class="insight-rothko" id="insightRothko"></div>
+    <div class="insight-keyword" id="insightKeyword"></div>
+    <div class="action-btns">
+      <button class="action-btn" onclick="goToScene(6)">✨ 다른 사람에게도 이 경험을</button>
+      <button class="action-btn" onclick="restart()">↺ 다시 시작</button>
     </div>
   </div>
-</div>
+</section>
 
-<!-- SHARE TAB -->
-<div id="tab-share" class="tab">
-  <div class="share-container">
-    <h2>✨ 로스코와 함께한 시간</h2>
-    <p>색만으로 사람을 울린 화가, 마크 로스코.<br>당신이 선택한 색과 감정은 로스코의 세계와 닿아있습니다.</p>
-    <p style="color:#e94560; font-style:italic; margin-top:16px;">"침묵이야말로 가장 정확하다."</p>
-    <p style="margin-top:30px; color:#666; font-size:0.85em;">산스 인생작가2 · 2025</p>
+<!-- SCENE 6: SHARE -->
+<section class="scene" id="scene6">
+  <div class="share-title">이 경험을 나누세요</div>
+  <div class="share-sub">색만으로 사람을 울린 화가, 마크 로스코.<br>당신이 선택한 색과 감정은 로스코의 세계와 닿아있습니다.</div>
+  <div class="share-quote">"침묵이야말로 가장 정확하다."</div>
+  <div class="share-link-box">
+    <input class="share-link-input" id="shareUrl" readonly>
+    <button class="share-copy-btn" onclick="copyLink()">복사</button>
   </div>
-</div>
+  <div class="copied-msg" id="copiedMsg">링크가 복사되었습니다</div>
+  <div class="share-back"><button class="action-btn" onclick="restart()">↺ 처음부터 다시</button></div>
+</section>
 
 <script>
-let selectedColor = null;
-let selectedEmotion = null;
-
-function showTab(name) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  event.target.classList.add('active');
-}
-
-const colorPalettes = {
-  red: { bg: '#1a0a0a', layers: ['#8b1a1a','#c62828','#d32f2f','#a11c1c'] },
-  blue: { bg: '#0a0a1a', layers: ['#0d47a1','#1565c0','#1976d2','#0d3b8e'] },
-  orange: { bg: '#1a1008', layers: ['#bf360c','#e65100','#ef6c00','#c43e00'] },
-  darkblue: { bg: '#05051a', layers: ['#0a1247','#1a237e','#1a1a6e','#0a0e3d'] },
-  green: { bg: '#0a1a0a', layers: ['#1b5e20','#2e7d32','#388e3c','#1a4a1a'] },
-  purple: { bg: '#0f0a1a', layers: ['#4a148c','#6a1b9a','#7b1fa2','#3a0e6e'] }
+const palette={
+  ochre:{bg:'radial-gradient(ellipse at center,#2a1810 0%,#0a0807 70%)',top:'linear-gradient(180deg,#d49435 0%,#c2832a 50%,#a86a1f 100%)',bottom:'linear-gradient(180deg,#8b3a2f 0%,#6b2a1f 50%,#4a1f15 100%)',whisper:'"태양 같은 노랑은 비명이 아니라 환희다. 그러나 환희 곁에는 늘 그림자가 있다." — Rothko, 1958',insight:'당신은 불타오르는 색을 골랐습니다.<br>로스코는 이 색을 \'환희\'라고 불렀습니다.<br>다만, 환희는 늘 무언가를 갈망하기에 옵니다.',sub:'갈망이 있다는 것은 아직 살아있다는 것입니다. 무엇을 향한 불꽃인지, 잠시 들여다보세요.'},
+  crimson:{bg:'radial-gradient(ellipse at center,#1a0808 0%,#050202 70%)',top:'linear-gradient(180deg,#8b2a26 0%,#6b1e1a 50%,#4a1419 100%)',bottom:'linear-gradient(180deg,#2a0a0a 0%,#150505 50%,#0a0202 100%)',whisper:'"붉은색은 출생이고, 검은색은 죽음이다. 그 사이에 우리가 있다." — Rothko, 1969',insight:'당신은 핏빛과 어둠 사이의 색을 골랐습니다.<br>로스코의 마지막 시기 색입니다.<br>무언가를 잃었거나, 잃을까 두려운 마음일지도 모릅니다.',sub:'상실은 사랑했다는 증거입니다. 그 무게를 부정하지 마세요. 색 앞에 머무는 것만으로 충분합니다.'},
+  slate:{bg:'radial-gradient(ellipse at center,#0a0c0f 0%,#050608 70%)',top:'linear-gradient(180deg,#3a3e45 0%,#2a2e35 50%,#1a1c20 100%)',bottom:'linear-gradient(180deg,#15171a 0%,#0a0b0d 50%,#050607 100%)',whisper:'"침묵은 정확하다. 말은 그것을 망친다." — Rothko, 1947',insight:'당신은 무거운 회색을 골랐습니다.<br>로스코가 죽기 1년 전 도달한 색입니다.<br>모든 것을 통과한 자리에서만 보이는 색입니다.',sub:'지금 가라앉아 있다면, 그것은 끝이 아니라 깊이입니다. 떠오르는 것이 아니라 머무르는 법을 배우는 시간일지도 모릅니다.'},
+  bone:{bg:'radial-gradient(ellipse at center,#1a1612 0%,#0a0807 70%)',top:'linear-gradient(180deg,#e8dcb8 0%,#d4c8a8 50%,#b8a888 100%)',bottom:'linear-gradient(180deg,#8a7a5a 0%,#5a4d38 50%,#2a2418 100%)',whisper:'"나는 비어있는 캔버스가 무섭다. 그것은 모든 것을 받아들이기 때문이다." — Rothko',insight:'당신은 빛이 바랜 흰색을 골랐습니다.<br>모든 색이 빠져나간 자리,<br>혹은 아직 무엇도 시작되지 않은 자리입니다.',sub:'텅 빔은 결핍이 아닐 수 있습니다. 무언가가 들어올 자리를 비워둔 것일지도 모릅니다.'},
+  plum:{bg:'radial-gradient(ellipse at center,#150508 0%,#050202 70%)',top:'linear-gradient(180deg,#6a2a3a 0%,#4a1f2a 50%,#2f1018 100%)',bottom:'linear-gradient(180deg,#1a0508 0%,#0a0204 50%,#050102 100%)',whisper:'"내 그림은 비극에 관한 것이다. 그것을 보지 못한다면, 당신은 보고 있지 않은 것이다." — Rothko, 1957',insight:'당신은 멍든 자줏빛을 골랐습니다.<br>로스코가 가장 자주 돌아갔던 색입니다.<br>상처는 사라지지 않지만, 색이 됩니다.',sub:'아픔을 부정하지 않고 색으로 두는 것 — 그것이 견딤입니다. 당신은 이미 그렇게 하고 있습니다.'},
+  deep:{bg:'radial-gradient(ellipse at center,#050a0d 0%,#02050a 70%)',top:'linear-gradient(180deg,#2a4a5a 0%,#1a3a4a 50%,#0f2530 100%)',bottom:'linear-gradient(180deg,#050d12 0%,#02060a 50%,#010305 100%)',whisper:'"관객은 그림 안으로 들어와야 한다. 보는 것이 아니라, 거주하는 것이다." — Rothko, 1951',insight:'당신은 깊은 푸름을 골랐습니다.<br>로스코는 이 색을 \'명상의 입구\'라고 불렀습니다.<br>당신은 지금 무언가를 응시하고 있습니다.',sub:'응시는 답을 찾는 일이 아닙니다. 답이 떠오를 때까지 머무는 일입니다. 서두르지 마세요.'}
 };
-
-const healingMessages = {
-  red: { title: "🔥 당신의 에너지를 인정하세요", text: "로스코는 빨강에 인간의 가장 원초적 에너지를 담았습니다. 분노도, 열정도, 삶의 증거입니다. 그 에너지를 부정하지 마세요. 로스코가 말했듯 — '기본 감정을 표현하는 것'이 곧 살아있다는 증거입니다." },
-  blue: { title: "🌊 당신의 고요는 깊이 있는겁니다", text: "로스코의 파란색은 울음을 부르는 색입니다. 외로움이 아니라 당신이 얼마나 깊이 느끼는 사람인지의 증거입니다. 로스코의 그림 앞에서 사람들은 왜 울었을까요? 자기 감정을 마주할 용기가 있었으니까요." },
-  orange: { title: "🌅 그리움은 사랑의 잔상입니다", text: "로스코의 주황은 태양의 마지막 빛처럼 따뜻합니다. 그리운 것이 있다는 건, 그만큼 소중한 것이 있었다는 뜻입니다. 로스코도 러시아를 떠나며 고향을 그리워했습니다. 그 그리움이 색면에 따뜻함으로 남았습니다." },
-  darkblue: { title: "🌌 깊은 곳에서 별이 보입니다", text: "로스코는 말년에 점점 어두운 색을 선택했습니다. 하지만 그 어둠 속에서 사람들은 위로를 받았습니다. 슬픔의 끝에서 만나는 고요 — 그것이 로스코 채플이 전 세계인의 치유 공간인 이유입니다." },
-  green: { title: "🌱 당신의 희망은 뿌리내리고 있습니다", text: "로스코는 이민자로서, 예일 중퇴자로서, 늘 새출발의 연속이었습니다. 희망은 그가 평생 놓지 않은 색입니다. 당신이 선택한 희망은 막연한 기대가 아닙니다. 뿌리가 있는 나무의 새싹입니다." },
-  purple: { title: "🌙 고독은 당신만의 성소입니다", text: "로스코는 '침묵이야말로 가장 정확하다'고 했습니다. 혼자만의 시간은 외로움이 아니라 당신만의 성소입니다. 로스코 채플에 들어선 사람들은 말을 잃습니다. 그리고 그 침묵에서 위로를 찾습니다." }
-};
-
-function selectColor(btn) {
-  document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  selectedColor = btn.dataset.color;
-  selectedEmotion = btn.dataset.emotion;
-
-  setTimeout(() => {
-    document.getElementById('step1').style.display = 'none';
-    document.getElementById('step2').style.display = 'block';
-    document.getElementById('dot1').classList.remove('active');
-    document.getElementById('dot2').classList.add('active');
-    generateRothko();
-  }, 600);
+let currentColor=null,timerInterval=null;
+function goToScene(n){
+  document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));
+  setTimeout(()=>{document.getElementById('scene'+n).classList.add('active');window.scrollTo(0,0);if(n===5)renderInsight();if(n===6)document.getElementById('shareUrl').value=window.location.href;},100);
 }
-
-function generateRothko() {
-  const canvas = document.getElementById('rothkoCanvas');
-  const palette = colorPalettes[selectedColor];
-  canvas.style.display = 'block';
-  canvas.style.background = palette.bg;
-  canvas.innerHTML = '';
-
-  const positions = [12, 34, 58];
-  const heights = [18, 20, 22];
-
-  positions.forEach((top, i) => {
-    const layer = document.createElement('div');
-    layer.className = 'rothko-layer';
-    layer.style.top = top + '%';
-    layer.style.height = heights[i] + '%';
-    layer.style.background = palette.layers[i];
-    layer.style.filter = `blur(${2 + i}px)`;
-    canvas.appendChild(layer);
-    setTimeout(() => layer.classList.add('visible'), 400 + i * 800);
+function selectColor(k){
+  currentColor=k;const c=palette[k];
+  document.getElementById('canvasStage').style.background=c.bg;
+  document.getElementById('fieldTop').style.background=c.top;
+  document.getElementById('fieldBottom').style.background=c.bottom;
+  document.getElementById('whisper').textContent=c.whisper;
+  goToScene(4);setTimeout(startTimer,800);
+}
+function startTimer(){
+  let elapsed=0;const total=15,circ=169.6,pr=document.getElementById('timerProgress'),tx=document.getElementById('timerText'),wh=document.getElementById('whisper'),nx=document.getElementById('nextPrompt');
+  pr.style.strokeDashoffset=circ;tx.textContent=total;
+  if(timerInterval)clearInterval(timerInterval);
+  timerInterval=setInterval(()=>{
+    elapsed+=.1;pr.style.strokeDashoffset=circ*(1-elapsed/total);tx.textContent=Math.max(0,Math.ceil(total-elapsed));
+    if(elapsed>=8&&!wh.classList.contains('visible'))wh.classList.add('visible');
+    if(elapsed>=total){clearInterval(timerInterval);tx.textContent='∞';nx.classList.add('visible')}
+  },100);
+}
+function renderInsight(){
+  const c=palette[currentColor],kw=document.getElementById('reflection').value;
+  document.getElementById('insightTop').style.background=c.top;
+  document.getElementById('insightBottom').style.background=c.bottom;
+  document.getElementById('insightText').innerHTML=c.insight;
+  document.getElementById('insightRothko').textContent=c.sub;
+  document.getElementById('insightKeyword').textContent=kw?'"'+kw+'" — 당신이 이 색 앞에서 남긴 말':'' ;
+}
+function restart(){
+  if(timerInterval)clearInterval(timerInterval);
+  document.getElementById('reflection').value='';
+  document.getElementById('whisper').classList.remove('visible');
+  document.getElementById('nextPrompt').classList.remove('visible');
+  goToScene(1);
+}
+function copyLink(){
+  navigator.clipboard.writeText(window.location.href).then(()=>{
+    const m=document.getElementById('copiedMsg');m.classList.add('show');setTimeout(()=>m.classList.remove('show'),2000);
   });
-
-  document.getElementById('emotionLabel').textContent = selectedEmotion;
-
-  setTimeout(() => {
-    document.getElementById('step2').style.display = 'none';
-    document.getElementById('step3').style.display = 'block';
-    document.getElementById('dot2').classList.remove('active');
-    document.getElementById('dot3').classList.add('active');
-  }, 3500);
-}
-
-function generateHealing() {
-  const keyword = document.getElementById('keywordInput').value.trim();
-  if (!keyword) return;
-
-  const msg = healingMessages[selectedColor];
-  document.getElementById('healingTitle').textContent = msg.title;
-  document.getElementById('healingText').textContent = msg.text + `\n\n당신이 적은 "${keyword}" — 로스코도 그 감정을 색으로 표현했을 것입니다.`;
-  document.getElementById('healingMsg').style.display = 'block';
 }
 </script>
 </body>
