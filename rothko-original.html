@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.13/html-to-image.min.js" integrity="sha512-iZ2ORl595Wx6miw+GuadDet4WQbdSWS3JLMoNfY8cRGoEFy6oT3G9IbcrBeL6AfkgpA51ETt/faX6yLV+/gFJg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+      (function() {
+        const originalConsole = window.console;
+        window.console = {
+          log: (...args) => {
+            originalConsole.log(...args);
+            window.parent.postMessage({ type: 'console', message: args.join(' ') }, '*');
+          },
+          error: (...args) => {
+            originalConsole.error(...args);
+            window.parent.postMessage({ type: 'console', message: 'Error: ' + args.join(' ') }, '*');
+          },
+          warn: (...args) => {
+            originalConsole.warn(...args);
+            window.parent.postMessage({ type: 'console', message: 'Warning: ' + args.join(' ') }, '*');
+          }
+        };
+
+        let requestId = 0;
+        let callbacksMap = new Map();
+        let streamControllers = new Map();
+        
+        window.claude = {
+          complete: (prompt) => {
+            return new Promise((resolve, reject) => {
+              const id = requestId++;
+              callbacksMap.set(id, { resolve, reject });
+              window.parent.postMessage({ type: 'claudeComplete', id, prompt }, '*');
+            });
+          }
+        };
+
+        window.storage = {
+          get: (key, shared = false) => {
+            return new Promise((resolve, reject) => {
+              const id = requestId++;
+              callbacksMap.set(id, { resolve, reject });
+              window.parent.postMessage({ type: 'storageGet', id, key, shared }, '*');
+            });
+          },
+          set: (key, value, shared = false) => {
+            return new Promise((resolve, reject) => {
+              const id = requestId++;
+              callbacksMap.set(id, { resolve, reject });
+              window.parent.postMessage({ type: 'storageSet', id, key, value, shared }, '*');
+            });
+          },
+          delete: (key, shared = false) => {
+            return new Promise((resolve, reject) => {
+              const id = requestId++;
+              callbacksMap.set(id, { resolve, reject });
+              window.parent.postMessage({ type: 'storageDelete', id, key, shared }, '*');
+            });
+          },
+          list: (prefix, shared = false) => {
+            return new Promise((resolve, reject) => {
+              const id = requestId++;
+              callbacksMap.set(id, { resolve, reject });
+              window.parent.postMessage({ type: 'storageList', id, prefix, shared }, '*');
+            });
+          }
+        };
+
+        let pendingBlobs = new Map();
+        URL.createObjectURL = (blob) => {
+          // Store the blob and create an ID and URL for it
+          const blobId = `blob-${Date.now()}-${Math.random()}`;
+          pendingBlobs.set(blobId, blob);
+          return `blob-request://${blobId}`;
+        };
+
+        URL.revokeObjectURL = (url) => {
+          // Remove the blob from our store
+          const blobId = url.replace("blob-request://", "");
+          pendingBlobs.delete(blobId);
+        };
+
+        const getBlobFromURL = (url) => {
+          const blobId = url.replace("blob-request://", "");
+          return pendingBlobs.get(blobId);
+        };
+
+        // Override global fetch with streaming support
+        window.fetch = (url, init = {}) => {
+          return new Promise((resolve, reject) => {
+            const id = requestId++;
+            const channelId = `fetch-${id}-${Date.now()}`;
+            
+            callbacksMap.set(id, { 
+              resolve: (response) => {
+                // Create a ReadableStream for the response body
+                const stream = new ReadableStream({
+                  start(controller) {
+                    streamControllers.set(channelId, controller);
+                  },
+                  cancel() {
+                    streamControllers.delete(channelId);
+                  }
+                });
+                
+                // Create and return the Response with the stream
+                resolve(new Response(stream, {
+                  status: response.status,
+                  statusText: response.statusText,
+                  headers: response.headers
+                }));
+              },
+              reject,
+              channelId
+            });
+            
+            window.parent.postMessage({
+              type: 'proxyFetch',
+              id,
+              url,
+              init,
+              channelId
+            }, '*');
+          });
+        };
+
+        window.addEventListener('message', async (event) => {
+          if (event.data.type === 'takeScreenshot') {
+            const rootElement = document.getElementById('artifacts-component-root-html');
+            if (!rootElement) {
+              window.parent.postMessage({
+                type: 'screenshotError',
+                error: new Error('Root element not found'),
+              }, '*');
+            }
+            const screenshot = await htmlToImage.toPng(rootElement, {
+              imagePlaceholder:
+                "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1JREFUGFdjePDgwX8ACOQDoNsk0PMAAAAASUVORK5CYII=",
+            });
+            window.parent.postMessage({
+              type: 'screenshotData',
+              data: screenshot,
+            }, '*');
+          } else if (event.data.type === 'claudeComplete') {
+            const callback = callbacksMap.get(event.data.id);
+            if (event.data.error) {
+              callback.reject(new Error(event.data.error));
+            } else {
+              callback.resolve(event.data.completion);
+            }
+            callbacksMap.delete(event.data.id);
+          } else if (event.data.type === 'proxyFetchResponse') {
+            const callback = callbacksMap.get(event.data.id);
+            if (event.data.error) {
+              callback.reject(new Error(event.data.error));
+              callbacksMap.delete(event.data.id);
+            } else {
+              // Initial response with headers, status, etc.
+              callback.resolve({
+                status: event.data.status,
+                statusText: event.data.statusText,
+                headers: event.data.headers
+              });
+              // Don't delete the callback yet if streaming
+              if (!event.data.body) {
+                callbacksMap.delete(event.data.id);
+              }
+            }
+          } else if (event.data.type === 'proxyFetchStream') {
+            // Handle streaming data chunks
+            const controller = streamControllers.get(event.data.channelId);
+            if (controller) {
+              if (event.data.error) {
+                controller.error(new Error(event.data.error));
+                streamControllers.delete(event.data.channelId);
+              } else if (event.data.done) {
+                controller.close();
+                streamControllers.delete(event.data.channelId);
+                // Clean up the callback
+                const callback = Array.from(callbacksMap.entries()).find(
+                  ([_, value]) => value.channelId === event.data.channelId
+                );
+                if (callback) {
+                  callbacksMap.delete(callback[0]);
+                }
+              } else if (event.data.chunk) {
+                controller.enqueue(new Uint8Array(event.data.chunk));
+              }
+            }
+          } else if (event.data.type === 'storageGet') {
+            const callback = callbacksMap.get(event.data.id);
+            if (event.data.error) {
+              callback.reject(new Error(event.data.error));
+            } else {
+              callback.resolve(event.data.result);
+            }
+            callbacksMap.delete(event.data.id);
+          } else if (event.data.type === 'storageSet') {
+            const callback = callbacksMap.get(event.data.id);
+            if (event.data.error) {
+              callback.reject(new Error(event.data.error));
+            } else {
+              callback.resolve(event.data.result);
+            }
+            callbacksMap.delete(event.data.id);
+          } else if (event.data.type === 'storageDelete') {
+            const callback = callbacksMap.get(event.data.id);
+            if (event.data.error) {
+              callback.reject(new Error(event.data.error));
+            } else {
+              callback.resolve(event.data.result);
+            }
+            callbacksMap.delete(event.data.id);
+          } else if (event.data.type === 'storageList') {
+            const callback = callbacksMap.get(event.data.id);
+            if (event.data.error) {
+              callback.reject(new Error(event.data.error));
+            } else {
+              callback.resolve(event.data.result);
+            }
+            callbacksMap.delete(event.data.id);
+          }
+        });
+
+        window.addEventListener('click', (event) => {
+          const isEl = event.target instanceof HTMLElement;
+          if (!isEl) return;
+    
+          // find ancestor links
+          const linkEl = event.target.closest("a");
+          if (!linkEl || !linkEl.href) return;
+    
+          event.preventDefault();
+          event.stopImmediatePropagation();
+    
+          if (linkEl.href.startsWith("blob-request:")) {
+            const blob = getBlobFromURL(linkEl.href);
+            if (!blob) return;
+            void blob.arrayBuffer().then((data) => {
+              window.parent.postMessage({
+                type: "downloadFile",
+                filename: linkEl.download,
+                data,
+                mimeType: blob.type || "application/octet-stream",
+              });
+            });
+          } else if (linkEl.href.startsWith("data:")) {
+            const [header, base64Data] = linkEl.href.split(",");
+            const mimeMatch = header.match(/data:([^;]+)/);
+            const mimeType = mimeMatch ? mimeMatch[1] : "application/octet-stream";
+            const binaryString = atob(base64Data);
+            const data = Uint8Array.from(binaryString, (c) =>
+              c.charCodeAt(0),
+            ).buffer;
+            window.parent.postMessage({
+              type: "downloadFile",
+              filename: linkEl.download,
+              data,
+              mimeType,
+            });
+          } else {
+            let linkUrl;
+            try {
+              linkUrl = new URL(linkEl.href);
+            } catch (error) {
+              return;
+            }
+    
+            if (linkUrl.hostname === window.location.hostname) return;
+      
+            window.parent.postMessage({
+              type: 'openExternal',
+              href: linkEl.href,
+            }, '*');
+          }
+      });
+
+        const originalOpen = window.open;
+        window.open = function (url) {
+          window.parent.postMessage({
+            type: "openExternal",
+            href: url,
+          }, "*");
+        };
+
+        window.addEventListener('error', (event) => {
+          window.parent.postMessage({ type: 'console', message: 'Uncaught Error: ' + event.message }, '*');
+        });
+      })();
+    </script>
+  
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>색 앞에 서다 — Mark Rothko</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Nanum+Myeongjo:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  :root {
+    --bg: #0a0807;
+    --ink: #e8e2d8;
+    --ink-dim: #8a8278;
+    --ink-faint: #4a443c;
+    --rust: #8b3a2f;
+    --ochre: #c2832a;
+    --plum: #4a1f2a;
+    --slate: #2a2e35;
+    --bone: #d4c8a8;
+    --crimson: #6b1e1a;
+  }
+  
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Cormorant Garamond', 'Nanum Myeongjo', serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+    cursor: default;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  body {
+    background: 
+      radial-gradient(ellipse at 50% 0%, rgba(139,58,47,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 30% 100%, rgba(74,31,42,0.1) 0%, transparent 60%),
+      var(--bg);
+  }
+  
+  /* film grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  }
+  
+  .scene {
+    min-height: 100vh;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    position: relative;
+    animation: fadeIn 1.6s ease-out;
+  }
+  
+  .scene.active { display: flex; }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  /* ==================== SCENE 1: ENTRY ==================== */
+  
+  #scene1 {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .title-mark {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(0.75rem, 1.2vw, 0.95rem);
+    letter-spacing: 0.4em;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    margin-bottom: 4rem;
+    opacity: 0;
+    animation: rise 2s ease-out 0.3s forwards;
+  }
+  
+  .quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1.5rem, 3.5vw, 2.6rem);
+    line-height: 1.5;
+    max-width: 780px;
+    color: var(--ink);
+    opacity: 0;
+    animation: rise 3s ease-out 1.2s forwards;
+  }
+  
+  .quote-attribution {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.3em;
+    color: var(--ink-faint);
+    margin-top: 3rem;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: rise 2s ease-out 3s forwards;
+  }
+  
+  .enter-prompt {
+    position: absolute;
+    bottom: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.75rem;
+    letter-spacing: 0.5em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 1rem 2rem;
+    transition: color 1.2s ease;
+    opacity: 0;
+    animation: rise 2s ease-out 4.5s forwards, pulse 3s ease-in-out 6.5s infinite;
+  }
+  
+  .enter-prompt:hover { color: var(--ink); }
+  
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+  
+  /* ==================== SCENE 2: COLOR SELECTION ==================== */
+  
+  #scene2 {
+    flex-direction: column;
+  }
+  
+  .scene-label {
+    position: absolute;
+    top: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--ink-dim);
+    letter-spacing: 0.15em;
+  }
+  
+  .color-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    max-width: 900px;
+    width: 100%;
+    padding: 2rem;
+  }
+  
+  .color-tile {
+    aspect-ratio: 4/5;
+    cursor: pointer;
+    position: relative;
+    transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+  }
+  
+  .color-tile:hover {
+    transform: scale(1.03);
+  }
+  
+  .color-tile::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 60px rgba(0,0,0,0.4);
+    transition: opacity 0.6s;
+  }
+  
+  /* Rothko color fields - layered like his actual technique */
+  .tile-1 { background: linear-gradient(180deg, #c2832a 0%, #a86a1f 50%, #8b3a2f 100%); }
+  .tile-2 { background: linear-gradient(180deg, #6b1e1a 0%, #4a1419 50%, #1a0808 100%); }
+  .tile-3 { background: linear-gradient(180deg, #2a2e35 0%, #1a1c20 50%, #0a0b0d 100%); }
+  .tile-4 { background: linear-gradient(180deg, #d4c8a8 0%, #b8a888 50%, #8a7a5a 100%); }
+  .tile-5 { background: linear-gradient(180deg, #4a1f2a 0%, #2f1018 50%, #150508 100%); }
+  .tile-6 { background: linear-gradient(180deg, #1a3a4a 0%, #0f2530 50%, #050d12 100%); }
+  
+  .tile-emotion {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 1.5rem;
+    font-family: 'Nanum Myeongjo', serif;
+    font-size: 0.95rem;
+    color: rgba(255,250,240,0.85);
+    letter-spacing: 0.1em;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    opacity: 0;
+    transition: opacity 0.6s;
+  }
+  
+  .color-tile:hover .tile-emotion { opacity: 1; }
+  
+  /* ==================== SCENE 3: IMMERSION ==================== */
+  
+  #scene3 {
+    padding: 0;
+    flex-direction: column;
+  }
+  
+  .canvas-stage {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 2.5s ease;
+  }
+  
+  .rothko-canvas {
+    width: min(70vw, 60vh);
+    height: min(85vh, 90vw);
+    position: relative;
+    box-shadow: 
+      0 30px 80px rgba(0,0,0,0.7),
+      0 0 120px rgba(0,0,0,0.4);
+  }
+  
+  .field {
+    position: absolute;
+    left: 5%;
+    right: 5%;
+    filter: blur(1.5px);
+  }
+  
+  .field-top {
+    top: 8%;
+    height: 38%;
+  }
+  
+  .field-bottom {
+    top: 52%;
+    height: 40%;
+  }
+  
+  .field::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    filter: blur(12px);
+    opacity: 0.6;
+    background: inherit;
+  }
+  
+  .timer-ring {
+    position: absolute;
+    top: 2.5rem;
+    right: 2.5rem;
+    width: 60px;
+    height: 60px;
+    z-index: 10;
+  }
+  
+  .timer-ring svg {
+    transform: rotate(-90deg);
+    width: 100%;
+    height: 100%;
+  }
+  
+  .timer-ring circle {
+    fill: none;
+    stroke-width: 1.5;
+  }
+  
+  .timer-bg { stroke: var(--ink-faint); }
+  
+  .timer-progress {
+    stroke: var(--ink-dim);
+    stroke-dasharray: 169.6;
+    stroke-dashoffset: 169.6;
+    transition: stroke-dashoffset 0.1s linear;
+  }
+  
+  .timer-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--ink-dim);
+    font-size: 1rem;
+  }
+  
+  .reflection-input {
+    position: absolute;
+    bottom: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(500px, 80vw);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--ink-faint);
+    color: var(--ink);
+    font-family: 'Nanum Myeongjo', serif;
+    font-size: 1rem;
+    text-align: center;
+    padding: 1rem 0;
+    outline: none;
+    transition: border-color 0.6s;
+    opacity: 0;
+    animation: rise 1.5s ease-out 1s forwards;
+  }
+  
+  .reflection-input::placeholder {
+    color: var(--ink-faint);
+    font-style: italic;
+  }
+  
+  .reflection-input:focus { border-color: var(--ink-dim); }
+  
+  .whisper {
+    position: absolute;
+    top: 4rem;
+    left: 4rem;
+    max-width: 280px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--ink-dim);
+    opacity: 0;
+    transition: opacity 2s ease;
+  }
+  
+  .whisper.visible { opacity: 0.7; }
+  
+  .next-prompt {
+    position: absolute;
+    bottom: 8rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    letter-spacing: 0.5em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 0.8rem 1.5rem;
+    opacity: 0;
+    transition: color 0.6s, opacity 1s;
+  }
+  
+  .next-prompt.visible { opacity: 1; }
+  .next-prompt:hover { color: var(--ink); }
+  
+  /* ==================== SCENE 4: INSIGHT ==================== */
+  
+  #scene4 {
+    flex-direction: column;
+    padding: 4rem 2rem;
+  }
+  
+  .insight-wrapper {
+    max-width: 640px;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .insight-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.85rem;
+    letter-spacing: 0.4em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: rise 1.5s ease-out 0.3s forwards;
+  }
+  
+  .insight-color {
+    width: 200px;
+    height: 240px;
+    margin: 0 auto 3rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    opacity: 0;
+    animation: rise 2s ease-out 0.8s forwards;
+  }
+  
+  .insight-color .field {
+    filter: blur(1px);
+  }
+  
+  .insight-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1.4rem, 2.8vw, 2rem);
+    line-height: 1.6;
+    color: var(--ink);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: rise 2s ease-out 1.6s forwards;
+  }
+  
+  .insight-rothko {
+    font-family: 'Nanum Myeongjo', serif;
+    font-size: 0.95rem;
+    line-height: 1.9;
+    color: var(--ink-dim);
+    max-width: 480px;
+    margin: 0 auto 4rem;
+    opacity: 0;
+    animation: rise 2s ease-out 2.4s forwards;
+  }
+  
+  .restart {
+    background: transparent;
+    border: 1px solid var(--ink-faint);
+    color: var(--ink-dim);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.85rem;
+    letter-spacing: 0.3em;
+    padding: 1rem 2.5rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.6s;
+    opacity: 0;
+    animation: rise 2s ease-out 3s forwards;
+  }
+  
+  .restart:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  
+  /* responsive */
+  @media (max-width: 640px) {
+    .color-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    .whisper { display: none; }
+    .timer-ring { top: 1.5rem; right: 1.5rem; width: 48px; height: 48px; }
+  }
+</style>
+</head>
+<body id="artifacts-component-root-html">
+
+<!-- ==================== SCENE 1 ==================== -->
+<section class="scene active" id="scene1">
+  <div class="title-mark">Mark Rothko · 1903–1970</div>
+  <div class="quote">
+    "나는 색이 아니라 비극, 황홀, 운명을 그린다."
+  </div>
+  <div class="quote-attribution">— Rothko, 1956</div>
+  <div class="enter-prompt" onclick="goToScene(2)">잠시 멈추고 들어가기</div>
+</section>
+
+<!-- ==================== SCENE 2 ==================== -->
+<section class="scene" id="scene2">
+  <div class="scene-label">오늘 당신과 가장 닮은 색을 고르세요</div>
+  <div class="color-grid">
+    <div class="color-tile tile-1" onclick="selectColor('ochre')">
+      <div class="tile-emotion">불타오름 · 갈망</div>
+    </div>
+    <div class="color-tile tile-2" onclick="selectColor('crimson')">
+      <div class="tile-emotion">상실 · 그리움</div>
+    </div>
+    <div class="color-tile tile-3" onclick="selectColor('slate')">
+      <div class="tile-emotion">무거움 · 침잠</div>
+    </div>
+    <div class="color-tile tile-4" onclick="selectColor('bone')">
+      <div class="tile-emotion">텅 빔 · 정적</div>
+    </div>
+    <div class="color-tile tile-5" onclick="selectColor('plum')">
+      <div class="tile-emotion">상처 · 견딤</div>
+    </div>
+    <div class="color-tile tile-6" onclick="selectColor('deep')">
+      <div class="tile-emotion">깊음 · 응시</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SCENE 3 ==================== -->
+<section class="scene" id="scene3">
+  <div class="canvas-stage" id="canvasStage">
+    <div class="timer-ring">
+      <svg viewBox="0 0 60 60">
+        <circle class="timer-bg" cx="30" cy="30" r="27"/>
+        <circle class="timer-progress" id="timerProgress" cx="30" cy="30" r="27"/>
+      </svg>
+      <div class="timer-text" id="timerText">15</div>
+    </div>
+    <div class="whisper" id="whisper"></div>
+    <div class="rothko-canvas" id="rothkoCanvas">
+      <div class="field field-top" id="fieldTop"></div>
+      <div class="field field-bottom" id="fieldBottom"></div>
+    </div>
+    <input type="text" class="reflection-input" id="reflection" placeholder="이 색 앞에서 떠오르는 한 단어를 적어보세요">
+    <div class="next-prompt" id="nextPrompt" onclick="goToScene(4)">통찰 보기</div>
+  </div>
+</section>
+
+<!-- ==================== SCENE 4 ==================== -->
+<section class="scene" id="scene4">
+  <div class="insight-wrapper">
+    <div class="insight-label">당신이 본 것</div>
+    <div class="insight-color" id="insightCanvas">
+      <div class="field field-top" id="insightTop"></div>
+      <div class="field field-bottom" id="insightBottom"></div>
+    </div>
+    <div class="insight-text" id="insightText"></div>
+    <div class="insight-rothko" id="insightRothko"></div>
+    <button class="restart" onclick="restart()">다시 시작</button>
+  </div>
+</section>
+
+<script>
+  // Rothko color palette mapping
+  const palette = {
+    ochre: {
+      bg: 'radial-gradient(ellipse at center, #2a1810 0%, #0a0807 70%)',
+      top: 'linear-gradient(180deg, #d49435 0%, #c2832a 50%, #a86a1f 100%)',
+      bottom: 'linear-gradient(180deg, #8b3a2f 0%, #6b2a1f 50%, #4a1f15 100%)',
+      whisper: '"태양 같은 노랑은 비명이 아니라 환희다. 그러나 환희 곁에는 늘 그림자가 있다." — Rothko, 1958',
+      insight: '당신은 불타오르는 색을 골랐습니다.<br>로스코는 이 색을 \'환희\'라고 불렀습니다.<br>다만, 환희는 늘 무언가를 갈망하기에 옵니다.',
+      sub: '갈망이 있다는 것은 아직 살아있다는 것입니다. 무엇을 향한 불꽃인지, 잠시 들여다보세요.'
+    },
+    crimson: {
+      bg: 'radial-gradient(ellipse at center, #1a0808 0%, #050202 70%)',
+      top: 'linear-gradient(180deg, #8b2a26 0%, #6b1e1a 50%, #4a1419 100%)',
+      bottom: 'linear-gradient(180deg, #2a0a0a 0%, #150505 50%, #0a0202 100%)',
+      whisper: '"붉은색은 출생이고, 검은색은 죽음이다. 그 사이에 우리가 있다." — Rothko, 1969',
+      insight: '당신은 핏빛과 어둠 사이의 색을 골랐습니다.<br>로스코의 마지막 시기 색입니다.<br>무언가를 잃었거나, 잃을까 두려운 마음일지도 모릅니다.',
+      sub: '상실은 사랑했다는 증거입니다. 그 무게를 부정하지 마세요. 색 앞에 머무는 것만으로 충분합니다.'
+    },
+    slate: {
+      bg: 'radial-gradient(ellipse at center, #0a0c0f 0%, #050608 70%)',
+      top: 'linear-gradient(180deg, #3a3e45 0%, #2a2e35 50%, #1a1c20 100%)',
+      bottom: 'linear-gradient(180deg, #15171a 0%, #0a0b0d 50%, #050607 100%)',
+      whisper: '"침묵은 정확하다. 말은 그것을 망친다." — Rothko, 1947',
+      insight: '당신은 무거운 회색을 골랐습니다.<br>로스코가 죽기 1년 전 도달한 색입니다.<br>모든 것을 통과한 자리에서만 보이는 색입니다.',
+      sub: '지금 가라앉아 있다면, 그것은 끝이 아니라 깊이입니다. 떠오르는 것이 아니라 머무르는 법을 배우는 시간일지도 모릅니다.'
+    },
+    bone: {
+      bg: 'radial-gradient(ellipse at center, #1a1612 0%, #0a0807 70%)',
+      top: 'linear-gradient(180deg, #e8dcb8 0%, #d4c8a8 50%, #b8a888 100%)',
+      bottom: 'linear-gradient(180deg, #8a7a5a 0%, #5a4d38 50%, #2a2418 100%)',
+      whisper: '"나는 비어있는 캔버스가 무섭다. 그것은 모든 것을 받아들이기 때문이다." — Rothko',
+      insight: '당신은 빛이 바랜 흰색을 골랐습니다.<br>모든 색이 빠져나간 자리,<br>혹은 아직 무엇도 시작되지 않은 자리입니다.',
+      sub: '텅 빔은 결핍이 아닐 수 있습니다. 무언가가 들어올 자리를 비워둔 것일지도 모릅니다.'
+    },
+    plum: {
+      bg: 'radial-gradient(ellipse at center, #150508 0%, #050202 70%)',
+      top: 'linear-gradient(180deg, #6a2a3a 0%, #4a1f2a 50%, #2f1018 100%)',
+      bottom: 'linear-gradient(180deg, #1a0508 0%, #0a0204 50%, #050102 100%)',
+      whisper: '"내 그림은 비극에 관한 것이다. 그것을 보지 못한다면, 당신은 보고 있지 않은 것이다." — Rothko, 1957',
+      insight: '당신은 멍든 자줏빛을 골랐습니다.<br>로스코가 가장 자주 돌아갔던 색입니다.<br>상처는 사라지지 않지만, 색이 됩니다.',
+      sub: '아픔을 부정하지 않고 색으로 두는 것 — 그것이 견딤입니다. 당신은 이미 그렇게 하고 있습니다.'
+    },
+    deep: {
+      bg: 'radial-gradient(ellipse at center, #050a0d 0%, #02050a 70%)',
+      top: 'linear-gradient(180deg, #2a4a5a 0%, #1a3a4a 50%, #0f2530 100%)',
+      bottom: 'linear-gradient(180deg, #050d12 0%, #02060a 50%, #010305 100%)',
+      whisper: '"관객은 그림 안으로 들어와야 한다. 보는 것이 아니라, 거주하는 것이다." — Rothko, 1951',
+      insight: '당신은 깊은 푸름을 골랐습니다.<br>로스코는 이 색을 \'명상의 입구\'라고 불렀습니다.<br>당신은 지금 무언가를 응시하고 있습니다.',
+      sub: '응시는 답을 찾는 일이 아닙니다. 답이 떠오를 때까지 머무는 일입니다. 서두르지 마세요.'
+    }
+  };
+  
+  let currentColor = null;
+  let timerInterval = null;
+  
+  function goToScene(n) {
+    document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+    setTimeout(() => {
+      document.getElementById('scene' + n).classList.add('active');
+      window.scrollTo(0, 0);
+      if (n === 4) renderInsight();
+    }, 100);
+  }
+  
+  function selectColor(colorKey) {
+    currentColor = colorKey;
+    const c = palette[colorKey];
+    
+    // apply colors
+    document.getElementById('canvasStage').style.background = c.bg;
+    document.getElementById('fieldTop').style.background = c.top;
+    document.getElementById('fieldBottom').style.background = c.bottom;
+    document.getElementById('whisper').textContent = c.whisper;
+    
+    goToScene(3);
+    
+    // start timer
+    setTimeout(startTimer, 800);
+  }
+  
+  function startTimer() {
+    let timeLeft = 15;
+    const circumference = 169.6;
+    const progressEl = document.getElementById('timerProgress');
+    const textEl = document.getElementById('timerText');
+    const whisperEl = document.getElementById('whisper');
+    const nextEl = document.getElementById('nextPrompt');
+    
+    progressEl.style.strokeDashoffset = circumference;
+    textEl.textContent = timeLeft;
+    
+    let elapsed = 0;
+    const total = 15;
+    
+    timerInterval = setInterval(() => {
+      elapsed += 0.1;
+      const progress = elapsed / total;
+      progressEl.style.strokeDashoffset = circumference * (1 - progress);
+      
+      timeLeft = Math.max(0, Math.ceil(total - elapsed));
+      textEl.textContent = timeLeft;
+      
+      // whisper appears at 8 seconds
+      if (elapsed >= 8 && !whisperEl.classList.contains('visible')) {
+        whisperEl.classList.add('visible');
+      }
+      
+      // next prompt appears at end
+      if (elapsed >= total) {
+        clearInterval(timerInterval);
+        textEl.textContent = '∞';
+        nextEl.classList.add('visible');
+      }
+    }, 100);
+  }
+  
+  function renderInsight() {
+    const c = palette[currentColor];
+    document.getElementById('insightTop').style.background = c.top;
+    document.getElementById('insightBottom').style.background = c.bottom;
+    document.getElementById('insightText').innerHTML = c.insight;
+    document.getElementById('insightRothko').textContent = c.sub;
+  }
+  
+  function restart() {
+    if (timerInterval) clearInterval(timerInterval);
+    document.getElementById('reflection').value = '';
+    document.getElementById('whisper').classList.remove('visible');
+    document.getElementById('nextPrompt').classList.remove('visible');
+    goToScene(1);
+  }
+</script>
+</body>
+</html>
