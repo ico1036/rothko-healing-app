@@ -66,7 +66,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
 .color-tile{aspect-ratio:4/5;cursor:pointer;position:relative;transition:transform 1s cubic-bezier(.16,1,.3,1);overflow:hidden}
 .color-tile:hover{transform:scale(1.03)}
 .color-tile::after{content:'';position:absolute;inset:0;box-shadow:inset 0 0 60px rgba(0,0,0,.4);transition:opacity .6s}
-.tile-1{background:linear-gradient(180deg,#c2832a 0%,#a86a1f 50%,#8b3a2f 100%)}
+.tile-1{background:linear-gradient(180deg,#c2832a 0%,#b8792a 50%,#a86a1f 100%)}
 .tile-2{background:linear-gradient(180deg,#6b1e1a 0%,#4a1419 50%,#1a0808 100%)}
 .tile-3{background:linear-gradient(180deg,#2a2e35 0%,#1a1c20 50%,#0a0b0d 100%)}
 .tile-4{background:linear-gradient(180deg,#d4c8a8 0%,#b8a888 50%,#8a7a5a 100%)}
@@ -78,7 +78,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
 /* === SCENE 4: IMMERSION === */
 #scene4{padding:0;flex-direction:column}
 .canvas-stage{width:100%;height:100vh;position:relative;display:flex;align-items:center;justify-content:center;transition:background 2.5s ease}
-.rothko-canvas{width:min(70vw,60vh);height:min(85vh,90vw);position:relative;box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 120px rgba(0,0,0,.4)}
+.rothko-canvas{width:min(80vw,45vh);height:min(65vh,85vw);position:relative;box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 120px rgba(0,0,0,.4)}
 .field{position:absolute;left:5%;right:5%;filter:blur(1.5px)}
 .field-top{top:8%;height:38%}
 .field-bottom{top:52%;height:40%}
@@ -296,7 +296,7 @@ function restart(){
   document.getElementById('reflection').value='';
   document.getElementById('whisper').classList.remove('visible');
   document.getElementById('nextPrompt').classList.remove('visible');
-  goToScene(1);
+  goToScene(3);
 }
 function copyLink(){
   navigator.clipboard.writeText(window.location.href).then(()=>{
