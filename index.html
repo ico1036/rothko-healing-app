@@ -22,7 +22,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:100;o
 /* === SCENE 1: ENTRY === */
 #scene1{flex-direction:column;text-align:center}
 .title-mark{font-style:italic;font-weight:300;font-size:clamp(.75rem,1.2vw,.95rem);letter-spacing:.4em;color:var(--ink-dim);text-transform:uppercase;margin-bottom:4rem;opacity:0;animation:rise 2s ease-out .3s forwards}
-.entry-quote{font-style:italic;font-weight:300;font-size:clamp(1.5rem,3.5vw,2.6rem);line-height:1.5;max-width:780px;color:var(--ink);opacity:0;animation:rise 3s ease-out 1.2s forwards}
+.entry-quote{font-style:italic;font-weight:300;font-size:clamp(1.5rem,3.5vw,2.6rem);line-height:1.8;max-width:90vw;color:var(--ink);opacity:0;animation:rise 3s ease-out 1.2s forwards;padding:0 1rem;word-break:keep-all;overflow-wrap:break-word}
 .entry-attr{font-size:.85rem;letter-spacing:.3em;color:var(--ink-faint);margin-top:3rem;text-transform:uppercase;opacity:0;animation:rise 2s ease-out 3s forwards}
 .entry-btns{display:flex;gap:2rem;margin-top:4rem;opacity:0;animation:rise 2s ease-out 4s forwards;flex-wrap:wrap;justify-content:center}
 .entry-btn{background:transparent;border:1px solid var(--ink-faint);color:var(--ink-dim);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.9rem;letter-spacing:.25em;padding:1rem 2.5rem;cursor:pointer;text-transform:uppercase;transition:all .6s}
@@ -137,7 +137,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:100;o
 <!-- SCENE 1: ENTRY -->
 <section class="scene active" id="scene1">
   <div class="title-mark">Mark Rothko · 1903–1970</div>
-  <div class="entry-quote">"나는 색이 아니라 비극, 황홀, 운명을 그린다."</div>
+  <div class="entry-quote">"나는 색이 아니라<br>비극, 황홀, 운명을 그린다."</div>
   <div class="entry-attr">— Rothko, 1956</div>
   <div class="entry-btns">
     <button class="entry-btn" onclick="goToScene(2)">📖 로스코 이야기</button>
@@ -160,8 +160,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:100;o
     <div class="tl-item">
       <div class="tl-year">1949 — "떠다니는 사각형" 탄생</div>
       <div class="tl-heading">반투명 색면이 겹겹이 쌓인 구도를 완성</div>
-      <div class="tl-body">얼핏 단순해 보이지만, 시간이 지나면서 감정이 풀려나온다.</div>
-      <div class="tl-quote">"그림은 즉각적이지 않다. 시간을 두고 펼쳐지도록 만들었다"</div>
+      <div class="tl-body">얼핏 단순해 보이지만,<br>시간이 지나면서 감정이 풀려나온다.</div>
+      <div class="tl-quote">"그림은 즉각적이지 않다.<br>시간을 두고 펼쳐지도록 만들었다."</div>
       <img class="tl-art" src="images/no9_1948.jpg" alt="No. 9, 1948 by Mark Rothko">
       <div class="tl-art-caption">No. 9, 1948 — 초기 색면 실험</div>
     </div>
