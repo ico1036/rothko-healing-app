@@ -12,7 +12,7 @@
 :root{--bg:#0a0807;--ink:#e8e2d8;--ink-dim:#8a8278;--ink-faint:#4a443c;--rust:#8b3a2f;--ochre:#c2832a;--plum:#4a1f2a;--slate:#2a2e35;--bone:#d4c8a8;--crimson:#6b1e1a}
 html,body{background:var(--bg);color:var(--ink);font-family:'Cormorant Garamond','Nanum Myeongjo',serif;overflow-x:hidden;min-height:100vh;-webkit-font-smoothing:antialiased}
 body{background:radial-gradient(ellipse at 50% 0%,rgba(139,58,47,.08) 0%,transparent 50%),radial-gradient(ellipse at 30% 100%,rgba(74,31,42,.1) 0%,transparent 60%),var(--bg)}
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:100;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
+body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-webkit-tap-highlight-color:transparent;z-index:100;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E")}
 .scene{min-height:100vh;display:none;align-items:center;justify-content:center;padding:2rem;position:relative;animation:fadeIn 1.6s ease-out}
 .scene.active{display:flex}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
