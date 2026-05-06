@@ -47,6 +47,12 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:100;o
 .tl-item::before{content:'';position:absolute;left:-28px;top:24px;width:10px;height:10px;border-radius:50%;background:var(--ochre)}
 .tl-item.star{border-left:3px solid var(--rust)}
 .tl-item.star::before{background:var(--rust)}
+.tl-art{width:100%;max-width:240px;height:120px;margin:.8rem auto 0;border-radius:4px;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.tl-art-1903{background:radial-gradient(ellipse at center,#3a2a1a 0%,#1a0f08 100%)}
+.tl-art-1949{background:linear-gradient(180deg,#c2832a 0%,#a86a1f 40%,#8b3a2f 70%,#2a1210 100%);box-shadow:inset 0 0 30px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.5)}
+.tl-art-seagram{background:linear-gradient(180deg,#5a1a1a 0%,#3a0e0e 35%,#1a0808 65%,#0a0404 100%);box-shadow:inset 0 0 40px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.5)}
+.tl-art-chapel{background:linear-gradient(180deg,#1a1a2e 0%,#0e0e1a 40%,#08080f 70%,#040408 100%);box-shadow:inset 0 0 40px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.5)}
+.tl-art-caption{font-size:.75rem;color:var(--ink-faint);text-align:center;margin-top:.4rem;letter-spacing:.1em}
 .tl-year{font-size:.8rem;letter-spacing:.3em;color:var(--ochre);text-transform:uppercase;margin-bottom:.5rem}
 .tl-item.star .tl-year{color:var(--rust)}
 .tl-heading{font-size:1.15rem;font-weight:500;margin-bottom:.5rem}
@@ -151,12 +157,15 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:100;o
       <div class="tl-year">1903 — 이민자 아이</div>
       <div class="tl-heading">러시아(現 라트비아)에서 태어나 10세에 미국으로</div>
       <div class="tl-body">유대인 가정에서 태어나, 10세에 오리건으로 이민. 예일 입학 후 2년 만에 자퇴하고 뉴욕에서 그림을 시작했다.</div>
+      <div class="tl-art tl-art-1903"></div>
     </div>
     <div class="tl-item">
       <div class="tl-year">1949 — "떠다니는 사각형" 탄생</div>
       <div class="tl-heading">반투명 색면이 겹겹이 쌓인 구도를 완성</div>
       <div class="tl-body">얼핏 단순해 보이지만, 시간이 지나면서 감정이 풀려나온다.</div>
       <div class="tl-quote">"그림은 즉각적이지 않다. 시간을 두고 펼쳐지도록 만들었다"</div>
+      <div class="tl-art tl-art-1949"></div>
+      <div class="tl-art-caption">No. 14, 1960</div>
     </div>
     <div class="tl-item star">
       <div class="tl-year">⭐ 1958~60 — 시즌그램 사건</div>
@@ -164,12 +173,16 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:100;o
       <div class="tl-body">뉴욕 최고급 레스토랑 "Four Seasons"에서 벽화 의뢰를 받아 수개월간 작업했다. 하지만 레스토랑을 직접 방문한 순간 깨달았다.</div>
       <div class="tl-quote">"부자들이 와인 마시며 장식품으로 볼 장소가 아니다"</div>
       <div class="tl-body" style="margin-top:.5rem"><strong>전액 환불 + 작품 회수</strong> → 9점을 런던 테이트 갤러리에 기증. 돈보다 감정, 상업보다 진정성을 선택한 사람.</div>
+      <div class="tl-art tl-art-seagram"></div>
+      <div class="tl-art-caption">The Seagram Murals, 1958-59 · Tate Modern, London</div>
     </div>
     <div class="tl-item">
       <div class="tl-year">1964~71 — 로스코 채플</div>
       <div class="tl-heading">휴스턴에 명상 공간을 설계하다</div>
       <div class="tl-body">거의 검정/보랏빛의 벽화 14점. 시각보다 영적 경험에 가까운 공간. 1970년 2월 25일 자살로 생을 마감했지만, 채플은 오늘날까지 전 세계인의 치유 공간으로 남아있다.</div>
       <div class="tl-quote">"침묵이야말로 가장 정확하다. (Silence is so accurate.)"</div>
+      <div class="tl-art tl-art-chapel"></div>
+      <div class="tl-art-caption">The Rothko Chapel, 1964-71 · Houston, Texas</div>
     </div>
     <div class="tl-item">
       <div class="tl-year">왜 로스코인가</div>
