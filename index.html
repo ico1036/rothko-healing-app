@@ -32,8 +32,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
 
 /* === SCENE 2: HISTORY === */
 #scene2{flex-direction:column;padding:4rem 2rem;max-width:700px;margin:0 auto}
-.history-back{position:fixed;top:2rem;left:2rem;font-style:italic;font-size:.85rem;letter-spacing:.2em;color:var(--ink-faint);cursor:pointer;z-index:10;transition:color .6s}
-.history-back:hover{color:var(--ink)}
+.history-back{position:fixed;top:2rem;left:2rem;font-style:italic;font-size:.85rem;letter-spacing:.2em;color:var(--ink-faint);cursor:pointer;z-index:10;transition:color .6s;background:rgba(0,0,0,.3);padding:.5rem 1rem;border-radius:2rem;backdrop-filter:blur(4px)}.history-back:hover{color:#fff;background:rgba(0,0,0,.5)}
 .history-title{font-style:italic;font-weight:300;font-size:clamp(1.8rem,4vw,2.8rem);text-align:center;margin-bottom:1rem;opacity:0;animation:rise 1.5s ease-out .3s forwards}
 .history-sub{font-style:italic;font-size:1rem;color:var(--ink-dim);text-align:center;margin-bottom:4rem;opacity:0;animation:rise 1.5s ease-out .8s forwards}
 .timeline{position:relative;padding-left:32px}
@@ -88,7 +87,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
 .timer-ring circle{fill:none;stroke-width:1.5}
 .timer-bg{stroke:var(--ink-faint)}
 .timer-progress{stroke:var(--ink-dim);stroke-dasharray:169.6;stroke-dashoffset:169.6;transition:stroke-dashoffset .1s linear}
-.timer-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-style:italic;color:var(--ink-dim);font-size:1rem}
+.timer-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-style:italic;color:rgba(255,250,240,.9);font-size:1.1rem;font-weight:600;text-shadow:0 0 8px rgba(0,0,0,.8)}
 .reflection-input{position:absolute;bottom:3rem;left:10%;right:10%;width:80vw;max-width:500px;margin:0 auto;background:transparent;border:none;border-bottom:1px solid var(--ink-faint);color:var(--ink);font-family:'Nanum Myeongjo',serif;font-size:1rem;text-align:center;padding:1rem 0;outline:none;transition:border-color .6s,opacity .6s;opacity:0;animation:rise 1.5s ease-out 1s forwards}.reflection-input:focus~.next-prompt{opacity:0 !important}
 .reflection-input::placeholder{color:var(--ink-faint);font-style:italic}
 .reflection-input:focus{border-color:var(--ink-dim)}
