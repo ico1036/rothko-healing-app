@@ -44,13 +44,13 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
 .tl-item:nth-child(4){animation-delay:2.8s}
 .tl-item:nth-child(5){animation-delay:3.2s}
 .tl-item:nth-child(6){animation-delay:3.6s}
-.tl-item::before{content:'';position:absolute;left:-28px;top:24px;width:10px;height:10px;border-radius:50%;background:var(--ochre)}
+.tl-item::before{content:'';position:absolute;left:-32px;top:18px;width:10px;height:10px;border-radius:50%;background:var(--ochre)}
 .tl-item.star{border-left:3px solid var(--rust)}
 .tl-item.star::before{background:var(--rust)}
 .tl-art{width:100%;max-width:280px;margin:.8rem 0 0;border-radius:4px;box-shadow:0 8px 24px rgba(0,0,0,.5);object-fit:cover;grid-column:2;max-width:min(280px,100%)}
 .tl-art-placeholder{width:100%;max-width:240px;height:120px;margin:.8rem 0 0;border-radius:4px;box-shadow:0 8px 24px rgba(0,0,0,.5);grid-column:2}
 .tl-art-1903{background:radial-gradient(ellipse at center,#3a2a1a 0%,#1a0f08 100%)}
-.tl-art-caption{font-size:.75rem;color:rgba(200,190,170,.8);text-align:center;margin-top:.4rem;letter-spacing:.1em;grid-column:2}
+.tl-art-caption{font-size:.75rem;color:rgba(200,190,170,.8);text-align:center;margin-top:.4rem;letter-spacing:.1em;grid-column:2;padding-right:.5rem}
 .tl-year{font-size:.9rem;letter-spacing:.3em;color:var(--ochre);text-transform:uppercase;margin-bottom:.5rem;grid-column:1;text-align:right;padding-right:16px;border-right:2px solid rgba(255,201,71,.3);word-break:keep-all}
 .tl-item.star .tl-year{color:var(--rust);border-right-color:var(--rust)}
 .tl-heading{font-size:1.15rem;font-weight:500;margin-bottom:.5rem;grid-column:2;min-width:0;overflow-wrap:break-word;word-break:keep-all}
@@ -148,11 +148,13 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
   .timeline{padding-left:24px}
   .tl-item{grid-template-columns:80px 1fr;gap:0 10px}
   .tl-item.analysis-item{grid-template-columns:80px 1fr}
+  .tl-item::before{left:-28px;top:16px;width:8px;height:8px}
   .tl-year{font-size:.68rem;letter-spacing:.1em;padding-right:10px}
   .tl-heading{font-size:1rem}
   .tl-body{font-size:.82rem}
   .tl-quote{font-size:.8rem}
   .tl-art{max-width:100%}
+  .tl-art-caption{font-size:.7rem}
   .color-grid{grid-template-columns:repeat(2,1fr);gap:1rem}
   .whisper{display:none}
   .timer-ring{top:1.5rem;right:1.5rem;width:48px;height:48px}
