@@ -127,6 +127,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
   .timer-ring{top:1.5rem;right:1.5rem;width:48px;height:48px}
   .history-back{top:1rem;left:1rem;font-size:.75rem}
 }
+.exp-back{position:fixed;top:2rem;left:2rem;font-style:italic;font-size:.85rem;letter-spacing:.2em;color:var(--ink-faint);cursor:pointer;z-index:10;transition:color .6s;background:rgba(0,0,0,.3);padding:.5rem 1rem;border-radius:2rem;backdrop-filter:blur(4px);display:none}.exp-back:hover{color:#fff;background:rgba(0,0,0,.5)}
+.scene.active .exp-back{display:block}
 </style>
 </head>
 <body>
@@ -189,6 +191,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
 
 <!-- SCENE 3: COLOR SELECT -->
 <section class="scene" id="scene3">
+  <div class="exp-back" onclick="goToScene(1)">← 처음으로</div>
   <div class="scene-label">오늘 당신과 가장 닮은 색을 고르세요</div>
   <div class="color-grid">
     <div class="color-tile tile-1" onclick="selectColor('ochre')"><div class="tile-emotion">불타오름 · 갈망</div></div>
@@ -202,6 +205,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
 
 <!-- SCENE 4: IMMERSION -->
 <section class="scene" id="scene4">
+  <div class="exp-back" onclick="goToScene(3)">← 색 선택</div>
   <div class="canvas-stage" id="canvasStage">
     <div class="timer-ring">
       <svg viewBox="0 0 60 60"><circle class="timer-bg" cx="30" cy="30" r="27"/><circle class="timer-progress" id="timerProgress" cx="30" cy="30" r="27"/></svg>
@@ -219,6 +223,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
 
 <!-- SCENE 5: INSIGHT -->
 <section class="scene" id="scene5">
+  <div class="exp-back" onclick="goToScene(4)">← 다시 보기</div>
   <div class="insight-wrapper">
     <div class="insight-label">당신이 본 것</div>
     <div class="insight-color" id="insightCanvas">
@@ -260,7 +265,13 @@ const palette={
 let currentColor=null,timerInterval=null;
 function goToScene(n){
   document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));
-  setTimeout(()=>{document.getElementById('scene'+n).classList.add('active');window.scrollTo(0,0);if(n===5)renderInsight();if(n===6)document.getElementById('shareUrl').value=window.location.href;},100);
+  setTimeout(()=>{
+    document.getElementById('scene'+n).classList.add('active');
+    window.scrollTo(0,0);
+    if(n===5)renderInsight();
+    if(n===6)document.getElementById('shareUrl').value=window.location.href;
+    document.querySelectorAll('.exp-back').forEach(b=>b.style.display='none');
+  },100);
 }
 function selectColor(k){
   currentColor=k;const c=palette[k];
