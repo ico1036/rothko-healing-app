@@ -37,7 +37,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
 .history-sub{font-style:italic;font-size:1rem;color:var(--ink-dim);text-align:center;margin-bottom:4rem;opacity:0;animation:rise 1.5s ease-out .8s forwards}
 .timeline{position:relative;padding-left:32px}
 .timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:rgba(255,201,71,.2)}
-.tl-item{position:relative;margin-bottom:2.5rem;display:grid;grid-template-columns:130px 1fr;gap:0 20px;opacity:0;animation:rise 1.2s ease-out forwards;word-break:keep-all;overflow-wrap:break-word}
+.tl-item{position:relative;margin-bottom:2.5rem;display:grid;grid-template-columns:110px 1fr;gap:0 16px;opacity:0;animation:rise 1.2s ease-out forwards;word-break:keep-all;overflow-wrap:break-word}
 .tl-item:nth-child(1){animation-delay:1s}
 .tl-item:nth-child(2){animation-delay:1.4s}
 .tl-item:nth-child(3){animation-delay:1.8s}
@@ -123,6 +123,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
 .share-back{margin-top:3rem;opacity:0;animation:rise 1.5s ease-out 2s forwards}
 
 @media(min-width:641px){
+  .tl-item{grid-template-columns:130px 1fr;gap:0 20px}
+  .tl-item.analysis-item{grid-template-columns:130px 1fr}
   .entry-quote{font-size:clamp(2rem,4.5vw,3.2rem)}
   .history-title{font-size:clamp(2.2rem,5vw,3.4rem)}
   .history-sub{font-size:1.15rem}
@@ -141,13 +143,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
 }
 
 @media(max-width:640px){
-  .tl-item{grid-template-columns:90px 1fr;gap:0 10px}
-  .tl-item.analysis-item{grid-template-columns:90px 1fr}
-  .tl-year{font-size:.72rem;letter-spacing:.15em}
-  .tl-heading{font-size:1.05rem}
-  .tl-body{font-size:.85rem}
-  .tl-quote{font-size:.82rem}
-  .tl-art{max-width:180px}
   .color-grid{grid-template-columns:repeat(2,1fr);gap:1rem}
   .whisper{display:none}
   .timer-ring{top:1.5rem;right:1.5rem;width:48px;height:48px}
@@ -164,7 +159,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
 .emotion-chip.selected{color:#c8a832;border-color:#c8a832;background:rgba(200,168,50,.15)}
 
 /* === ANALYSIS SECTION === */
-.tl-item.analysis-item{grid-template-columns:130px 1fr;grid-column:1/-1}
+.tl-item.analysis-item{grid-template-columns:110px 1fr;grid-column:1/-1}
 .tl-analysis{grid-column:2;display:flex;gap:2rem;align-items:flex-start;flex-wrap:wrap}
 .analysis-img{width:260px;border-radius:4px;box-shadow:0 20px 60px rgba(0,0,0,.6);object-fit:cover;flex-shrink:0}
 .analysis-points{flex:1;min-width:200px}
