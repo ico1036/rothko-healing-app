@@ -141,11 +141,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
 /* === ANALYSIS SECTION === */
 .tl-item.analysis-item{grid-template-columns:110px 1fr;grid-column:1/-1}
 .tl-analysis{grid-column:2;display:flex;gap:2rem;align-items:flex-start;flex-wrap:wrap}
-.analysis-rothko{width:260px;height:340px;position:relative;flex-shrink:0;box-shadow:0 20px 60px rgba(0,0,0,.6);overflow:hidden}
-.analysis-field{position:absolute;left:5%;right:5%;filter:blur(1.5px)}
-.analysis-field::before{content:'';position:absolute;inset:-8px;filter:blur(12px);opacity:.6;background:inherit}
-.analysis-top{top:8%;height:38%;background:linear-gradient(180deg,#c8842a 0%,#b87828 40%,#a86a20 100%)}
-.analysis-bottom{top:52%;height:40%;background:linear-gradient(180deg,#d4a838 0%,#c89830 40%,#b88828 100%)}
+.analysis-img{width:260px;border-radius:4px;box-shadow:0 20px 60px rgba(0,0,0,.6);object-fit:cover;flex-shrink:0}
 .analysis-points{flex:1;min-width:200px}
 .analysis-point{display:flex;gap:.8rem;align-items:flex-start;margin-bottom:1rem;opacity:0;transform:translateY(10px);transition:opacity .8s,transform .8s}
 .analysis-point.visible{opacity:1;transform:translateY(0)}
@@ -191,10 +187,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
     <div class="tl-item analysis-item">
       <div class="tl-year">대표작 분석</div>
       <div class="tl-analysis">
-        <div class="analysis-rothko" id="analysisCanvas">
-          <div class="analysis-field analysis-top"></div>
-          <div class="analysis-field analysis-bottom"></div>
-        </div>
+        <img class="tl-art analysis-img" src="images/orange_yellow_1956.jpg" alt="Orange and Yellow, 1956 - Mark Rothko">
+        <div class="tl-art-caption">Orange and Yellow, 1956 · Buffalo AKG Art Museum</div>
         <div class="analysis-points" id="analysisPoints">
           <div class="analysis-point" data-delay="0">
             <span class="ap-label">색채</span>
