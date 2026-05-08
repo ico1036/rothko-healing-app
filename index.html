@@ -129,6 +129,14 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
 }
 .exp-back{position:fixed;top:2rem;left:2rem;font-style:italic;font-size:.85rem;letter-spacing:.2em;color:rgba(255,255,255,.85);cursor:pointer;z-index:10;transition:all .4s;background:rgba(0,0,0,.45);padding:.5rem 1rem;border-radius:2rem;backdrop-filter:blur(4px)}.exp-back:hover{color:#c8a832}
 .scene:not(.active) .exp-back{display:none!important}
+
+.emotion-select{position:absolute;bottom:3rem;left:10%;right:10%;width:80vw;max-width:500px;margin:0 auto;text-align:center;opacity:0;transition:opacity 1s}.emotion-select.visible{opacity:1}
+.emotion-label{font-family:'Nanum Myeongjo',serif;font-size:.85rem;color:var(--ink-dim);margin-bottom:1rem;letter-spacing:.15em}
+.emotion-chips{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center}
+.emotion-chip{background:rgba(255,255,255,.08);border:1px solid var(--ink-faint);color:var(--ink-dim);font-family:'Nanum Myeongjo',serif;font-size:.85rem;padding:.5rem 1.2rem;border-radius:2rem;cursor:pointer;transition:all .4s;letter-spacing:.1em}
+.emotion-chip:hover{color:#c8a832;border-color:rgba(200,168,50,.4);background:rgba(200,168,50,.1)}
+.emotion-chip.selected{color:#c8a832;border-color:#c8a832;background:rgba(200,168,50,.15)}
+
 </style>
 </head>
 <body>
@@ -194,12 +202,12 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
   <div class="exp-back" onclick="goToScene(1)">← 처음으로</div>
   <div class="scene-label">오늘 당신과 가장 닮은 색을 고르세요</div>
   <div class="color-grid">
-    <div class="color-tile tile-1" onclick="selectColor('ochre')"><div class="tile-emotion">불타오름 · 갈망</div></div>
-    <div class="color-tile tile-2" onclick="selectColor('crimson')"><div class="tile-emotion">상실 · 그리움</div></div>
-    <div class="color-tile tile-3" onclick="selectColor('slate')"><div class="tile-emotion">무거움 · 침잠</div></div>
-    <div class="color-tile tile-4" onclick="selectColor('bone')"><div class="tile-emotion">텅 빔 · 정적</div></div>
-    <div class="color-tile tile-5" onclick="selectColor('plum')"><div class="tile-emotion">상처 · 견딤</div></div>
-    <div class="color-tile tile-6" onclick="selectColor('deep')"><div class="tile-emotion">깊음 · 응시</div></div>
+    <div class="color-tile tile-1" onclick="selectColor('ochre')"></div>
+    <div class="color-tile tile-2" onclick="selectColor('crimson')"></div>
+    <div class="color-tile tile-3" onclick="selectColor('slate')"></div>
+    <div class="color-tile tile-4" onclick="selectColor('bone')"></div>
+    <div class="color-tile tile-5" onclick="selectColor('plum')"></div>
+    <div class="color-tile tile-6" onclick="selectColor('deep')"></div>
   </div>
 </section>
 
@@ -216,7 +224,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
       <div class="field field-top" id="fieldTop"></div>
       <div class="field field-bottom" id="fieldBottom"></div>
     </div>
-    <input type="text" class="reflection-input" id="reflection" placeholder="이 색 앞에서 떠오르는 단어를 적고 ↓ 아래 '통찰 보기'를 누르세요">
+    <div class="emotion-select" id="emotionSelect"><div class="emotion-label">이 색이 당신에게 건네는 감정은?</div><div class="emotion-chips" id="emotionChips"></div></div>
     <div class="next-prompt" id="nextPrompt" onclick="goToScene(5)">통찰 보기</div>
   </div>
 </section>
@@ -262,18 +270,20 @@ const palette={
   plum:{bg:'radial-gradient(ellipse at center,#150508 0%,#050202 70%)',top:'linear-gradient(180deg,#6a2a3a 0%,#4a1f2a 50%,#2f1018 100%)',bottom:'linear-gradient(180deg,#1a0508 0%,#0a0204 50%,#050102 100%)',whisper:'"비극적이고 시간을 초월하는 것만이 유효한 주제다." — Rothko, 1943',insight:'멍든 자줏빛입니다.<br>파랑과 빨강이 부딪혀 만든 색.<br>화면으로는 어두운 보라이지만, 실제로는 상처의 색입니다.<br>로스코가 가장 자주 돌아간 색이기도 합니다.<br>아픔을 그리지 않은 게 아니라, 아픔 자체를 색으로 바꾼 것입니다.',sub:'당신의 상처는 어떤 색인가요?<br>아픔을 부정하지 않고 색으로 두는 것 — 그것이 견딤입니다.<br>당신은 이미 그렇게 하고 있지 않나요?'},
   deep:{bg:'radial-gradient(ellipse at center,#050a0d 0%,#02050a 70%)',top:'linear-gradient(180deg,#2a4a5a 0%,#1a3a4a 50%,#0f2530 100%)',bottom:'linear-gradient(180deg,#050d12 0%,#02060a 50%,#010305 100%)',whisper:'"그림은 기적이어야 한다." — Rothko',insight:'깊은 푸름입니다.<br>바다도, 하늘도 아닌, 어둠 속의 푸름입니다.<br>실제 로스코의 이 색 앞에 서면, 시선이 빨려 들어갑니다.<br>어디서 끝나는지 모르는 깊이.<br>사람들은 이 색 앞에서 시간을 잊습니다.',sub:'당신은 지금 무엇을 응시하고 있나요?<br>답을 찾는 것이 아닙니다.<br>답이 떠오를 때까지 머무는 것입니다.<br>서두르지 마세요.'}
 };
-let currentColor=null,timerInterval=null;
+let currentColor=null,timerInterval=null,selectedEmotion=null;
+const emotions=['비극','황홀','침묵','상실','견딤','온기','응시','비움'];
+
 function goToScene(n){
   document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));
   setTimeout(()=>{
     document.getElementById('scene'+n).classList.add('active');
     window.scrollTo(0,0);
-    if(n===5)renderInsight();
+    if(n===4)showEmotionChips();if(n===5)renderInsight();
     if(n===6)document.getElementById('shareUrl').value=window.location.href;
   },100);
 }
 function selectColor(k){
-  currentColor=k;const c=palette[k];
+  currentColor=k;selectedEmotion=null;const c=palette[k];
   document.getElementById('canvasStage').style.background=c.bg;
   document.getElementById('fieldTop').style.background=c.top;
   document.getElementById('fieldBottom').style.background=c.bottom;
@@ -287,22 +297,97 @@ function startTimer(){
   timerInterval=setInterval(()=>{
     elapsed+=.1;pr.style.strokeDashoffset=circ*(1-elapsed/total);tx.textContent=Math.max(0,Math.ceil(total-elapsed));
     if(elapsed>=8&&!wh.classList.contains('visible'))wh.classList.add('visible');
-    if(elapsed>=total){clearInterval(timerInterval);tx.textContent='∞';nx.classList.add('visible')}
+    if(elapsed>=total){clearInterval(timerInterval);tx.textContent='∞';document.getElementById('emotionSelect').classList.add('visible')}
   },100);
 }
 function renderInsight(){
-  const c=palette[currentColor],kw=document.getElementById('reflection').value;
+  const c=palette[currentColor];
   document.getElementById('insightTop').style.background=c.top;
   document.getElementById('insightBottom').style.background=c.bottom;
   document.getElementById('insightText').innerHTML=c.insight;
   document.getElementById('insightRothko').innerHTML=c.sub;
-  document.getElementById('insightKeyword').textContent=kw?'"'+kw+'" — 당신이 이 색 앞에서 남긴 말':'' ;
+  const em=selectedEmotion;
+  if(em){
+    const combo=comboMatrix[currentColor+'_'+em];
+    document.getElementById('insightKeyword').innerHTML=combo?'<span style="color:var(--ochre);letter-spacing:.2em">'+em+'</span><br><span style="font-size:.85rem;margin-top:.5rem;display:inline-block">'+combo+'</span>':'';
+  }else{
+    document.getElementById('insightKeyword').textContent='';
+  }
 }
+
+function showEmotionChips(){
+  const cont=document.getElementById('emotionChips');
+  cont.innerHTML='';
+  emotions.forEach(e=>{
+    const chip=document.createElement('div');
+    chip.className='emotion-chip';
+    chip.textContent=e;
+    chip.onclick=()=>{
+      cont.querySelectorAll('.emotion-chip').forEach(c=>c.classList.remove('selected'));
+      chip.classList.add('selected');
+      selectedEmotion=e;
+      document.getElementById('nextPrompt').classList.add('visible');
+    };
+    cont.appendChild(chip);
+  });
+}
+const comboMatrix={
+ochre_비극:'따뜻했던 것의 상실. 불이 꺼진 게 아니라, 온기가 기억으로 남았다.',
+ochre_황홀:'불꽃이 아니라 체온. 타오르지 않아도 데워주는 온기가 있습니다.',
+ochre_침묵:'따뜻한 침묵. 말이 필요 없는 위로가 이 색 안에 있습니다.',
+ochre_상실:'잃어버린 따뜻함. 손에 쥐었던 온기가 빠져나간 자리.',
+ochre_견딤:'묵묵히 견디는 온기. 화려하지 않아도 꺼지지 않는 불씨.',
+ochre_온기:'당신이 만든 온기. 스스로를 데우는 법을 알고 있습니다.',
+ochre_응시:'불꽃을 바라보듯. 멍하니 바라보아도 괜찮은 색입니다.',
+ochre_비움:'온기가 빠져나간 자리. 텅 빈 것이 아니라 채울 준비가 된 것.',
+crimson_비극:'마지막 숨결. 로스코의 빨강은 사랑의 끝이 아니라 깊이를 보여줍니다.',
+crimson_황홀:'붉은 황홀. 숨이 멎는 듯한 아름다움에 사로잡히다.',
+crimson_침묵:'피의 침묵. 가장 깊은 곳에서 울리는 침묵입니다.',
+crimson_상실:'잃은 것의 무게. 빈자리가 아프다는 건 사랑했다는 증거입니다.',
+crimson_견딤:'상처 속에서 견디는 붉음. 아프지만 꺾이지 않습니다.',
+crimson_온기:'차가운 빨강 속 온기. 분노 아래에 숨은 상처를 보세요.',
+crimson_응시:'붉음을 응시하다. 끝을 알 수 없는 깊이에 시선이 머뭅니다.',
+crimson_비움:'붉은 빈자리. 가장 뜨거웠던 것의 자채가 남은 곳.',
+slate_비극:'무거운 슬픔. 가라앉는 것은 끝이 아닙니다.',
+slate_황홀:'황홀한 고요. 아무 일도 일어나지 않는 순간의 경이.',
+slate_침묵:'침묵이 가장 정확하다. 이 회색 앞에서 모든 소리가 멈춥니다.',
+slate_상실:'잊혀진 것들. 회색은 모든 색이 빠져나간 자리입니다.',
+slate_견딤:'가라앉는 법을 배우는 시간. 떠오르지 않아도 괜찮습니다.',
+slate_온기:'회색 속 온기. 차갑지만 가만히 있으면 미세한 온기를 느낍니다.',
+slate_응시:'끝없이 응시하다. 회색은 답을 주지 않지만 머물게 합니다.',
+slate_비움:'완전한 비움. 모든 것이 가라앉은 바닥의 고요.',
+bone_비극:'바랜 슬픔. 시간이 지나 색이 빠진 상처.',
+bone_황홀:'비움의 황홀. 아무것도 없는 곳에서 시작되는 경이.',
+bone_침묵:'오래된 돌의 침묵. 말없이 오래 버틴 것의 위엄.',
+bone_상실:'모든 색이 빠져나간 자리. 바랜 것은 오래 사랑받은 증거.',
+bone_견딤:'바램의 견딤. 색이 바래도 형태는 남습니다.',
+bone_온기:'바랜 온기. 오래되었지만 여전히 따뜻한 것.',
+bone_응시:'빈 캔버스를 응시하다. 두려운 것이 아니라 가능한 것.',
+bone_비움:'텅 빔은 끝이 아니다. 모든 것이 들어올 수 있는 자리.',
+plum_비극:'멍든 비극. 아픔 자체를 색으로 바꾼 것.',
+plum_황홀:'아픔 속 황홀. 상처가 빚어낸 보랏빛 아름다움.',
+plum_침묵:'상처의 침묵. 아프지만 소리 내지 않는 견딤.',
+plum_상실:'멍든 상실. 부딪힌 자리에 남은 보랏빛 자국.',
+plum_견딤:'견딤의 색. 아픔을 부정하지 않고 색으로 두는 것.',
+plum_온기:'상처 속 온기. 아픔과 따뜻함이 공존하는 색.',
+plum_응시:'상처를 응시하다. 외면하지 않고 마주하는 용기.',
+plum_비움:'아픔이 비워진 자리. 견딘 시간이 남긴 흔적.',
+deep_비극:'깊은 슬픔. 바다 밑바닥처럼 끝을 알 수 없는.',
+deep_황홀:'깊이의 황홀. 어둠 속에서 발견하는 빛.',
+deep_침묵:'심해의 침묵. 아무도 닿지 않는 곳의 고요.',
+deep_상실:'깊이 잠긴 상실. 표면에 뜨지 못한 것들.',
+deep_견딤:'깊이 견디다. 서두르지 않고 가라앉아 있는 힘.',
+deep_온기:'어둠 속 온기. 차갑지만 생명이 있는 깊이.',
+deep_응시:'끝없이 응시하다. 답이 아니라 머무름이 필요한 시간.',
+deep_비움:'깊은 비움. 모든 것을 삼킨 심해의 고요.'
+};
+
 function restart(){
   if(timerInterval)clearInterval(timerInterval);
-  document.getElementById('reflection').value='';
+  document.getElementById('reflection').value='';selectedEmotion=null;
   document.getElementById('whisper').classList.remove('visible');
   document.getElementById('nextPrompt').classList.remove('visible');
+  document.getElementById('emotionSelect').classList.remove('visible');
   goToScene(3);
 }
 function copyLink(){
