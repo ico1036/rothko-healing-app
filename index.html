@@ -127,8 +127,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
   .timer-ring{top:1.5rem;right:1.5rem;width:48px;height:48px}
   .history-back{top:1rem;left:1rem;font-size:.75rem}
 }
-.exp-back{position:fixed;top:2rem;left:2rem;font-style:italic;font-size:.85rem;letter-spacing:.2em;color:var(--ink-faint);cursor:pointer;z-index:10;transition:color .6s;background:rgba(0,0,0,.3);padding:.5rem 1rem;border-radius:2rem;backdrop-filter:blur(4px);display:none}.exp-back:hover{color:#fff;background:rgba(0,0,0,.5)}
-.scene.active .exp-back{display:block}
+.exp-back{position:fixed;top:2rem;left:2rem;font-style:italic;font-size:.85rem;letter-spacing:.2em;color:var(--ink-faint);cursor:pointer;z-index:10;transition:color .6s;background:rgba(0,0,0,.3);padding:.5rem 1rem;border-radius:2rem;backdrop-filter:blur(4px)}.exp-back:hover{color:#fff;background:rgba(0,0,0,.5)}
+.scene:not(.active) .exp-back{display:none!important}
 </style>
 </head>
 <body>
@@ -270,7 +270,6 @@ function goToScene(n){
     window.scrollTo(0,0);
     if(n===5)renderInsight();
     if(n===6)document.getElementById('shareUrl').value=window.location.href;
-    document.querySelectorAll('.exp-back').forEach(b=>b.style.display='none');
   },100);
 }
 function selectColor(k){
