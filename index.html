@@ -246,6 +246,33 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
         </div>
       </div>
     </div>
+    <div class="tl-item analysis-item">
+      <div class="tl-year">로스코의 철학</div>
+      <div class="tl-analysis">
+        <div class="analysis-points" id="philosophyPoints">
+          <div class="analysis-point" data-delay="0">
+            <span class="ap-label">미술관</span>
+            <span class="ap-text">그림이 아니라 '경험'. 지적 활동이 아닌 신체적 경험이었다.</span>
+          </div>
+          <div class="analysis-point" data-delay="1">
+            <span class="ap-label">영감</span>
+            <span class="ap-text">그리스 비극. 소포클레스, 아이스킬로스. 인간의 운명, 신과의 갈등, 선택의 무게.</span>
+          </div>
+          <div class="analysis-point" data-delay="2">
+            <span class="ap-label">기본 감정</span>
+            <span class="ap-text">슬픔은 슬픔이다. 황홀은 황홀이다. 2천 년 전이나 오늘이나 같은 깊이.</span>
+          </div>
+          <div class="analysis-point" data-delay="3">
+            <span class="ap-label">색의 언어</span>
+            <span class="ap-text">형태는 시대에 묶인다. 하지만 색만 남기면, 시대가 사라진다.</span>
+          </div>
+          <div class="analysis-point" data-delay="4">
+            <span class="ap-label">반대</span>
+            <span class="ap-text">이론이 아닌 감정. 설명이 아닌 경험. 지식이 아닌 울음.</span>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="tl-item star">
       <div class="tl-year">⭐ 1958~60 — 시즌그램 사건</div>
       <div class="tl-heading">거액의 의뢰를 돌려준 화가</div>
@@ -360,12 +387,18 @@ function goToScene(n){
     document.getElementById('scene'+n).classList.add('active');
     window.scrollTo(0,0);
     if(n===4)showEmotionChips();if(n===5)renderInsight();
-    if(n===2)startAnalysis();
+    if(n===2)startAnalysis(),startPhilosophy();
     if(n===6)document.getElementById('shareUrl').value=window.location.href;
   },100);
 }
 function startAnalysis(){
-  const pts=document.querySelectorAll('#analysisPoints .analysis-point');
+  animatePoints('analysisPoints');
+}
+function startPhilosophy(){
+  animatePoints('philosophyPoints');
+}
+function animatePoints(id){
+  const pts=document.querySelectorAll('#'+id+' .analysis-point');
   pts.forEach(p=>p.classList.remove('visible'));
   setTimeout(()=>{pts.forEach(p=>{
     const d=parseInt(p.dataset.delay||0);
