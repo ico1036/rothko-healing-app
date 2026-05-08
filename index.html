@@ -141,6 +141,13 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
 }
 
 @media(max-width:640px){
+  .tl-item{grid-template-columns:90px 1fr;gap:0 10px}
+  .tl-item.analysis-item{grid-template-columns:90px 1fr}
+  .tl-year{font-size:.72rem;letter-spacing:.15em}
+  .tl-heading{font-size:1.05rem}
+  .tl-body{font-size:.85rem}
+  .tl-quote{font-size:.82rem}
+  .tl-art{max-width:180px}
   .color-grid{grid-template-columns:repeat(2,1fr);gap:1rem}
   .whisper{display:none}
   .timer-ring{top:1.5rem;right:1.5rem;width:48px;height:48px}
