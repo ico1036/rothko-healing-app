@@ -271,7 +271,14 @@ const palette={
   deep:{bg:'radial-gradient(ellipse at center,#050a0d 0%,#02050a 70%)',top:'linear-gradient(180deg,#2a4a5a 0%,#1a3a4a 50%,#0f2530 100%)',bottom:'linear-gradient(180deg,#050d12 0%,#02060a 50%,#010305 100%)',whisper:'"그림은 기적이어야 한다." — Rothko',insight:'깊은 푸름입니다.<br>바다도, 하늘도 아닌, 어둠 속의 푸름입니다.<br>실제 로스코의 이 색 앞에 서면, 시선이 빨려 들어갑니다.<br>어디서 끝나는지 모르는 깊이.<br>사람들은 이 색 앞에서 시간을 잊습니다.',sub:'당신은 지금 무엇을 응시하고 있나요?<br>답을 찾는 것이 아닙니다.<br>답이 떠오를 때까지 머무는 것입니다.<br>서두르지 마세요.'}
 };
 let currentColor=null,timerInterval=null,selectedEmotion=null;
-const emotions=['비극','황홀','침묵','상실','견딤','온기','응시','비움'];
+const colorEmotions={
+  ochre:['불꽃','온기','갈망','황홀'],
+  crimson:['상실','그리움','비극','상처'],
+  slate:['침묵','가라앉음','무거움','명상'],
+  bone:['비움','정적','빈자리','기다림'],
+  plum:['상처','견딤','아픔','보라'],
+  deep:['응시','깊이','머무름','잊힘']
+};
 
 function goToScene(n){
   document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));
@@ -318,7 +325,8 @@ function renderInsight(){
 function showEmotionChips(){
   const cont=document.getElementById('emotionChips');
   cont.innerHTML='';
-  emotions.forEach(e=>{
+  if(!currentColor||!colorEmotions[currentColor])return;
+  colorEmotions[currentColor].forEach(e=>{
     const chip=document.createElement('div');
     chip.className='emotion-chip';
     chip.textContent=e;
