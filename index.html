@@ -384,7 +384,7 @@ deep_비움:'깊은 비움. 모든 것을 삼킨 심해의 고요.'
 
 function restart(){
   if(timerInterval)clearInterval(timerInterval);
-  document.getElementById('reflection').value='';selectedEmotion=null;
+  selectedEmotion=null;
   document.getElementById('whisper').classList.remove('visible');
   document.getElementById('nextPrompt').classList.remove('visible');
   document.getElementById('emotionSelect').classList.remove('visible');
