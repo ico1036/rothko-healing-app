@@ -45,35 +45,56 @@ body {
 
 .intro-card .color-field .top-block {
   flex: 1;
-  margin: 8% 7% 3% 7%;
+  margin: 8% 7% 0 7%;
   border-radius: 3px;
+  position: relative;
+  z-index: 1;
 }
 
 .intro-card .color-field .bottom-block {
   flex: 0.8;
-  margin: 3% 7% 8% 7%;
+  margin: 0 7% 8% 7%;
+  border-radius: 3px;
+  position: relative;
+  z-index: 1;
+}
+
+/* 면 사이 블렌드 영역 */
+.intro-card .color-field .blend {
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  height: 40px;
+  z-index: 2;
+  pointer-events: none;
   border-radius: 3px;
 }
 
+.card-1 .blend { top: calc(44% - 20px); background: linear-gradient(180deg, rgba(26,18,8,0) 0%, #2d1f0e 30%, #1a1208 70%, rgba(26,18,8,0) 100%); }
+.card-2 .blend { top: calc(44% - 20px); background: linear-gradient(180deg, rgba(138,101,24,0) 0%, #8a6518 30%, #1a1208 70%, rgba(45,31,14,0) 100%); }
+.card-3 .blend { top: calc(44% - 20px); background: linear-gradient(180deg, rgba(74,74,82,0) 0%, #4a4a52 30%, #5a5a62 70%, rgba(42,42,50,0) 100%); }
+.card-4 .blend { top: calc(44% - 20px); background: linear-gradient(180deg, rgba(106,101,96,0) 0%, #6a6560 30%, #5a5550 70%, rgba(58,53,48,0) 100%); }
+.card-5 .blend { top: calc(44% - 20px); background: linear-gradient(180deg, rgba(92,16,16,0) 0%, #5c1010 30%, #3d1510 70%, rgba(26,10,8,0) 100%); }
+
 /* 카드 1 */
-.card-1 .color-field .top-block { background: linear-gradient(180deg, #1a1208, #2d1f0e 50%, #0d0a05); box-shadow: inset 0 -15px 25px -10px #0d0a05; }
-.card-1 .color-field .bottom-block { background: linear-gradient(180deg, #3d2a12, #1a1208); box-shadow: inset 0 15px 25px -10px #0d0a05; }
+.card-1 .color-field .top-block { background: linear-gradient(180deg, #1a1208, #2d1f0e 50%, #0d0a05); }
+.card-1 .color-field .bottom-block { background: linear-gradient(180deg, #3d2a12, #1a1208); }
 
 /* 카드 2 */
-.card-2 .color-field .top-block { background: linear-gradient(180deg, #c4952a, #e8b84a 50%, #8a6518); box-shadow: inset 0 -15px 25px -10px #1a1208; }
-.card-2 .color-field .bottom-block { background: linear-gradient(180deg, #1a1208, #2d1f0e); box-shadow: inset 0 15px 25px -10px #1a1208; }
+.card-2 .color-field .top-block { background: linear-gradient(180deg, #c4952a, #e8b84a 50%, #8a6518); }
+.card-2 .color-field .bottom-block { background: linear-gradient(180deg, #1a1208, #2d1f0e); }
 
 /* 카드 3 */
-.card-3 .color-field .top-block { background: linear-gradient(180deg, #4a4a52, #6b6b73 50%, #3a3a42); box-shadow: inset 0 -15px 25px -10px #2a2a32; }
-.card-3 .color-field .bottom-block { background: linear-gradient(180deg, #5a5a62, #2a2a32); box-shadow: inset 0 15px 25px -10px #2a2a32; }
+.card-3 .color-field .top-block { background: linear-gradient(180deg, #4a4a52, #6b6b73 50%, #3a3a42); }
+.card-3 .color-field .bottom-block { background: linear-gradient(180deg, #5a5a62, #2a2a32); }
 
 /* 카드 4 */
-.card-4 .color-field .top-block { background: linear-gradient(180deg, #8a8580, #b5afa9 50%, #6a6560); box-shadow: inset 0 -15px 25px -10px #3a3530; }
-.card-4 .color-field .bottom-block { background: linear-gradient(180deg, #5a5550, #3a3530); box-shadow: inset 0 15px 25px -10px #3a3530; }
+.card-4 .color-field .top-block { background: linear-gradient(180deg, #8a8580, #b5afa9 50%, #6a6560); }
+.card-4 .color-field .bottom-block { background: linear-gradient(180deg, #5a5550, #3a3530); }
 
 /* 카드 5 */
-.card-5 .color-field .top-block { background: linear-gradient(180deg, #8b1a1a, #a83232 50%, #5c1010); box-shadow: inset 0 -15px 25px -10px #1a0a08; }
-.card-5 .color-field .bottom-block { background: linear-gradient(180deg, #3d1510, #1a0a08); box-shadow: inset 0 15px 25px -10px #1a0a08; }
+.card-5 .color-field .top-block { background: linear-gradient(180deg, #8b1a1a, #a83232 50%, #5c1010); }
+.card-5 .color-field .bottom-block { background: linear-gradient(180deg, #3d1510, #1a0a08); }
 
 /* 텍스트 */
 .intro-card .phrase {
@@ -150,31 +171,31 @@ body {
 
 <div class="intro-container">
   <div class="intro-card card-1">
-    <div class="color-field"><div class="top-block"></div><div class="bottom-block"></div></div>
+    <div class="color-field"><div class="top-block"></div><div class="bottom-block"></div><div class="blend"></div></div>
     <span class="phrase">유예가 허락되지 않은<br>시간성</span>
     <span class="detail">시간의 무게<br>기다릴 수 없는 압박</span>
   </div>
 
   <div class="intro-card card-2">
-    <div class="color-field"><div class="top-block"></div><div class="bottom-block"></div></div>
+    <div class="color-field"><div class="top-block"></div><div class="bottom-block"></div><div class="blend"></div></div>
     <span class="phrase">어둠을 투과하는<br>노란 온기</span>
     <span class="detail">절망 속에서도<br>스며드는 따뜻함</span>
   </div>
 
   <div class="intro-card card-3">
-    <div class="color-field"><div class="top-block"></div><div class="bottom-block"></div></div>
+    <div class="color-field"><div class="top-block"></div><div class="bottom-block"></div><div class="blend"></div></div>
     <span class="phrase">흐릿한 회색의 장막</span>
     <span class="detail">불확실함<br>앞이 보이지 않는 안개</span>
   </div>
 
   <div class="intro-card card-4">
-    <div class="color-field"><div class="top-block"></div><div class="bottom-block"></div></div>
+    <div class="color-field"><div class="top-block"></div><div class="bottom-block"></div><div class="blend"></div></div>
     <span class="phrase">채도가 소거된 시간</span>
     <span class="detail">색이 빠진 일상<br>무기력한 반복</span>
   </div>
 
   <div class="intro-card card-5">
-    <div class="color-field"><div class="top-block"></div><div class="bottom-block"></div></div>
+    <div class="color-field"><div class="top-block"></div><div class="bottom-block"></div><div class="blend"></div></div>
     <span class="phrase">훼손되지 않은<br>고유함의 방어선</span>
     <span class="detail">지켜야 할<br>나만의 본질</span>
   </div>
