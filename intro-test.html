@@ -28,15 +28,13 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  cursor: pointer;
   transition: flex 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .intro-card:hover {
-  flex: 1.5;
+  flex: 1.4;
 }
 
-/* 로스코 스타일 색면 배경 */
 .intro-card .color-field {
   position: absolute;
   inset: 0;
@@ -46,19 +44,17 @@ body {
 
 .intro-card .color-field .top-block {
   flex: 1;
-  margin: 8% 6% 3% 6%;
+  margin: 6% 5% 2% 5%;
   border-radius: 4px;
-  transition: opacity 0.4s;
 }
 
 .intro-card .color-field .bottom-block {
   flex: 0.8;
-  margin: 3% 6% 8% 6%;
+  margin: 2% 5% 6% 5%;
   border-radius: 4px;
-  transition: opacity 0.4s;
 }
 
-/* 카드 1: 유예가 허락되지 않은 시간성 — 어두운 갈색/검정 */
+/* 카드 1: 유예가 허락되지 않은 시간성 */
 .card-1 .color-field .top-block {
   background: linear-gradient(180deg, #1a1208 0%, #2d1f0e 50%, #0d0a05 100%);
 }
@@ -66,7 +62,7 @@ body {
   background: linear-gradient(180deg, #3d2a12 0%, #1a1208 100%);
 }
 
-/* 카드 2: 어둠을 투과하는 노란 온기 — 노란/오렌지 */
+/* 카드 2: 어둠을 투과하는 노란 온기 */
 .card-2 .color-field .top-block {
   background: linear-gradient(180deg, #c4952a 0%, #e8b84a 50%, #8a6518 100%);
 }
@@ -74,7 +70,7 @@ body {
   background: linear-gradient(180deg, #1a1208 0%, #2d1f0e 100%);
 }
 
-/* 카드 3: 흐릿한 회색의 장막 — 회색/푸른 회색 */
+/* 카드 3: 흐릿한 회색의 장막 */
 .card-3 .color-field .top-block {
   background: linear-gradient(180deg, #4a4a52 0%, #6b6b73 50%, #3a3a42 100%);
 }
@@ -82,7 +78,7 @@ body {
   background: linear-gradient(180deg, #5a5a62 0%, #2a2a32 100%);
 }
 
-/* 카드 4: 채도가 소거된 시간 — 무채색/퇴색 */
+/* 카드 4: 채도가 소거된 시간 */
 .card-4 .color-field .top-block {
   background: linear-gradient(180deg, #8a8580 0%, #b5afa9 50%, #6a6560 100%);
 }
@@ -90,7 +86,7 @@ body {
   background: linear-gradient(180deg, #5a5550 0%, #3a3530 100%);
 }
 
-/* 카드 5: 훼손되지 않는 고유함의 방어선 — 진한 빨강/적갈색 */
+/* 카드 5: 훼손되지 않는 고유함의 방어선 */
 .card-5 .color-field .top-block {
   background: linear-gradient(180deg, #8b1a1a 0%, #a83232 50%, #5c1010 100%);
 }
@@ -99,54 +95,17 @@ body {
 }
 
 /* 텍스트 */
-.intro-card .text-overlay {
+.intro-card .phrase {
   position: relative;
   z-index: 2;
   text-align: center;
-  padding: 1.5rem;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.5s 0.2s, transform 0.5s 0.2s;
-}
-
-.intro-card:hover .text-overlay {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.text-overlay .phrase {
-  font-size: 1.1rem;
+  padding: 2rem 1.5rem;
+  font-size: 1.15rem;
   font-weight: 400;
-  line-height: 1.6;
+  line-height: 1.7;
   letter-spacing: -0.02em;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.8);
   color: #f5f0eb;
-}
-
-.text-overlay .emotion {
-  margin-top: 0.8rem;
-  font-size: 0.8rem;
-  color: rgba(245, 240, 235, 0.5);
-  font-style: italic;
-}
-
-/* 기본: 문구만 중앙에 떠 있게 */
-.intro-card .default-text {
-  position: absolute;
-  z-index: 2;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  font-size: 0.95rem;
-  font-weight: 300;
-  letter-spacing: 0.15em;
-  color: rgba(245, 240, 235, 0.7);
-  text-shadow: 0 2px 8px rgba(0,0,0,0.9);
-  transition: opacity 0.3s;
-  line-height: 1.8;
-}
-
-.intro-card:hover .default-text {
-  opacity: 0;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.9), 0 0 40px rgba(0,0,0,0.6);
 }
 
 /* 모바일 */
@@ -155,23 +114,9 @@ body {
     flex-direction: column;
   }
   
-  .intro-card .default-text {
-    writing-mode: horizontal-tb;
-    font-size: 0.85rem;
-    letter-spacing: 0.05em;
-  }
-  
-  .intro-card .text-overlay {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  
-  .text-overlay .phrase {
-    font-size: 0.9rem;
-  }
-  
-  .intro-card:hover .default-text {
-    opacity: 0;
+  .intro-card .phrase {
+    font-size: 1rem;
+    padding: 1.5rem 2rem;
   }
 }
 </style>
@@ -185,11 +130,7 @@ body {
       <div class="top-block"></div>
       <div class="bottom-block"></div>
     </div>
-    <span class="default-text">유예가 허락되지 않은 시간성</span>
-    <div class="text-overlay">
-      <div class="phrase">유예가 허락되지 않은 시간성</div>
-      <div class="emotion">시간의 무게, 기다릴 수 없는 압박</div>
-    </div>
+    <span class="phrase">유예가 허락되지 않은 시간성</span>
   </div>
 
   <div class="intro-card card-2">
@@ -197,11 +138,7 @@ body {
       <div class="top-block"></div>
       <div class="bottom-block"></div>
     </div>
-    <span class="default-text">어둠을 투과하는 노란 온기</span>
-    <div class="text-overlay">
-      <div class="phrase">어둠을 투과하는 노란 온기</div>
-      <div class="emotion">절망 속에서도 스며드는 따뜻함</div>
-    </div>
+    <span class="phrase">어둠을 투과하는 노란 온기</span>
   </div>
 
   <div class="intro-card card-3">
@@ -209,11 +146,7 @@ body {
       <div class="top-block"></div>
       <div class="bottom-block"></div>
     </div>
-    <span class="default-text">흐릿한 회색의 장막</span>
-    <div class="text-overlay">
-      <div class="phrase">흐릿한 회색의 장막</div>
-      <div class="emotion">불확실함, 앞이 보이지 않는 안개</div>
-    </div>
+    <span class="phrase">흐릿한 회색의 장막</span>
   </div>
 
   <div class="intro-card card-4">
@@ -221,11 +154,7 @@ body {
       <div class="top-block"></div>
       <div class="bottom-block"></div>
     </div>
-    <span class="default-text">채도가 소거된 시간</span>
-    <div class="text-overlay">
-      <div class="phrase">채도가 소거된 시간</div>
-      <div class="emotion">색이 빠진 일상, 무기력한 반복</div>
-    </div>
+    <span class="phrase">채도가 소거된 시간</span>
   </div>
 
   <div class="intro-card card-5">
@@ -233,11 +162,7 @@ body {
       <div class="top-block"></div>
       <div class="bottom-block"></div>
     </div>
-    <span class="default-text">훼손되지 않는 고유함의 방어선</span>
-    <div class="text-overlay">
-      <div class="phrase">훼손되지 않는 고유함의 방어선</div>
-      <div class="emotion">지켜야 할 나만의 본질</div>
-    </div>
+    <span class="phrase">훼손되지 않는 고유함의 방어선</span>
   </div>
 </div>
 
