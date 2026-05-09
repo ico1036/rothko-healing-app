@@ -29,8 +29,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
 .chip-field{position:absolute;inset:0;display:flex;flex-direction:column;padding:10px}
 .ctop{flex:1;border-radius:2px;filter:blur(3px)}
 .cbottom{flex:.75;border-radius:2px;filter:blur(3px)}
-.chip-phrase,.chip-detail{position:relative;z-index:2;text-align:center;padding:8px;font-size:.68rem;line-height:1.5;color:#f5f0eb;text-shadow:0 1px 8px rgba(0,0,0,.9);transition:opacity .3s,transform .3s}
-.chip-detail{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:300;opacity:0;transform:translateY(5px)}
+.chip-phrase,.chip-detail{position:relative;z-index:2;text-align:center;padding:8px;font-size:1rem;line-height:1.5;color:#f5f0eb;text-shadow:0 1px 8px rgba(0,0,0,.9);transition:opacity .3s,transform .3s}
+.chip-detail{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:300;opacity:0;transform:translateY(5px)}
 .intro-chip:hover .chip-phrase{opacity:0;transform:translateY(-5px)}
 .intro-chip:hover .chip-detail{opacity:1;transform:translateY(0)}
 /* chip colors */
@@ -173,6 +173,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
   .intro-btns .entry-btn{white-space:nowrap;font-size:.85rem;padding:10px 16px}
   .intro-chips{flex-direction:column;align-items:center;gap:10px}
   .intro-chip{width:120px}
+  .chip-phrase{font-size:.8rem!important}
+  .chip-detail{font-size:.75rem!important}
   #scene2{padding:3rem 2rem 1rem .5rem}
   .timeline{padding-left:20px;padding-right:0}
   .tl-item{grid-template-columns:80px 1fr;gap:0 10px}
