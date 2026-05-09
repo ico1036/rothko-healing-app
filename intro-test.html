@@ -46,6 +46,51 @@ body {
   margin: 0 auto;
 }
 
+.action-buttons {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  min-width: 140px;
+}
+
+.btn:active { transform: scale(0.97); }
+
+.btn-story {
+  background: transparent;
+  color: var(--text);
+  border: 1.5px solid rgba(245,240,235,0.3);
+}
+
+.btn-story:hover {
+  background: rgba(245,240,235,0.08);
+  border-color: rgba(245,240,235,0.5);
+}
+
+.btn-experience {
+  background: var(--text);
+  color: var(--bg);
+  border: none;
+}
+
+.btn-experience:hover {
+  background: rgba(245,240,235,0.85);
+}
+
 .intro-container {
   display: flex;
   gap: 20px;
@@ -170,6 +215,12 @@ body {
 <!-- 로스코 명언 상단 -->
 <div class="quote-banner">
   <img src="images/rothko_quote.jpg" alt="나는 색이 아니라 비극, 황홀, 운명을 그린다 - 마크 로스코">
+</div>
+
+<!-- 버튼 -->
+<div class="action-buttons">
+  <a href="#" class="btn btn-story">로스코 이야기</a>
+  <a href="#" class="btn btn-experience">색 앞에 서기</a>
 </div>
 
 <div class="intro-container">
