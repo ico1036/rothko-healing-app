@@ -24,10 +24,23 @@ body {
   font-family: var(--font);
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
   padding: 48px 24px;
   -webkit-font-smoothing: antialiased;
+}
+
+.quote-banner {
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.quote-banner img {
+  width: 100%;
+  max-width: 480px;
+  border-radius: 4px;
 }
 
 .intro-container {
@@ -150,6 +163,11 @@ body {
 </style>
 </head>
 <body>
+
+<!-- 로스코 명언 상단 -->
+<div class="quote-banner">
+  <img src="images/rothko_quote.jpg" alt="나는 색이 아니라 비극, 황홀, 운명을 그린다 - 마크 로스코">
+</div>
 
 <div class="intro-container">
   <div class="intro-card card-1">
