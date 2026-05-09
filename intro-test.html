@@ -46,21 +46,36 @@ body {
   margin: 0 auto;
 }
 
-.quote-name {
+.quote-img-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.quote-overlay-name {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
   text-align: center;
-  font-size: 1.6rem;
+  padding-top: 8%;
+  font-size: 1.8rem;
   font-weight: 600;
   letter-spacing: 0.15em;
-  color: var(--text);
-  margin-top: 16px;
+  color: #f5f0eb;
+  background: linear-gradient(180deg, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.7) 70%, transparent 100%);
+  padding-bottom: 5%;
 }
 
 .quote-years {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 300;
   letter-spacing: 0.1em;
-  color: rgba(245,240,235,0.6);
+  color: rgba(245,240,235,0.5);
 }
+
+.quote-name { display: none; }
 
 .action-buttons {
   display: flex;
@@ -232,8 +247,10 @@ body {
 
 <!-- 로스코 명언 상단 -->
 <div class="quote-banner">
-  <img src="images/rothko_quote.jpg" alt="나는 색이 아니라 비극, 황홀, 운명을 그린다 - 마크 로스코">
-  <div class="quote-name">MARK ROTHKO<br><span class="quote-years">1903–1970</span></div>
+  <div class="quote-img-wrapper">
+    <img src="images/rothko_quote.jpg" alt="나는 색이 아니라 비극, 황홀, 운명을 그린다 - 마크 로스코">
+    <div class="quote-overlay-name">MARK ROTHKO<br><span class="quote-years">1903–1970</span></div>
+  </div>
 </div>
 
 <!-- 버튼 -->
