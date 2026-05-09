@@ -19,8 +19,31 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
 @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
 
-/* === SCENE 1: ENTRY === */
-#scene1{flex-direction:column;text-align:center}
+/* === SCENE 1: ENTRY (INTRO) === */
+#scene1{flex-direction:column;align-items:center;justify-content:center;gap:0;padding:2rem}
+.intro-quote-img{width:80%;max-width:420px;border-radius:4px;margin-bottom:1.5rem}
+.intro-btns{display:flex;gap:12px;margin-bottom:2rem}
+.intro-btn-accent{background:var(--ink)!important;color:var(--bg)!important;border:none!important}
+.intro-chips{display:flex;gap:16px}
+.intro-chip{aspect-ratio:3/4;width:120px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:2px;flex-shrink:0;cursor:pointer}
+.chip-field{position:absolute;inset:0;display:flex;flex-direction:column;padding:10px}
+.ctop{flex:1;border-radius:2px;filter:blur(3px)}
+.cbottom{flex:.75;border-radius:2px;filter:blur(3px)}
+.chip-phrase,.chip-detail{position:relative;z-index:2;text-align:center;padding:8px;font-size:.68rem;line-height:1.5;color:#f5f0eb;text-shadow:0 1px 8px rgba(0,0,0,.9);transition:opacity .3s,transform .3s}
+.chip-detail{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:300;opacity:0;transform:translateY(5px)}
+.intro-chip:hover .chip-phrase{opacity:0;transform:translateY(-5px)}
+.intro-chip:hover .chip-detail{opacity:1;transform:translateY(0)}
+/* chip colors */
+.intro-chip.card-1 .ctop{background:linear-gradient(180deg,#2d1f0e,#1a1208 60%,rgba(26,18,8,0))}
+.intro-chip.card-1 .cbottom{background:linear-gradient(0deg,#3d2a12,#2d1f0e 40%,rgba(45,31,14,0))}
+.intro-chip.card-2 .ctop{background:linear-gradient(180deg,#c4952a,#d4a83a 40%,rgba(180,130,30,0))}
+.intro-chip.card-2 .cbottom{background:linear-gradient(0deg,#2a1c08,#1f1508 30%,rgba(26,18,8,0))}
+.intro-chip.card-3 .ctop{background:linear-gradient(180deg,#5a5a64,#4a4a52 50%,rgba(74,74,82,0))}
+.intro-chip.card-3 .cbottom{background:linear-gradient(0deg,#4a4a55,#3e3e46 30%,rgba(62,62,70,0))}
+.intro-chip.card-4 .ctop{background:linear-gradient(180deg,#a09a94,#8a8580 50%,rgba(138,133,128,0))}
+.intro-chip.card-4 .cbottom{background:linear-gradient(0deg,#5a5550,#4a4540 30%,rgba(74,69,64,0))}
+.intro-chip.card-5 .ctop{background:linear-gradient(180deg,#982828,#7a1818 50%,rgba(122,24,24,0))}
+.intro-chip.card-5 .cbottom{background:linear-gradient(0deg,#301210,#25100a 30%,rgba(37,16,10,0))}
 .title-mark{font-style:italic;font-weight:300;font-size:clamp(.75rem,1.2vw,.95rem);letter-spacing:.4em;color:var(--ink-dim);text-transform:uppercase;margin-bottom:4rem;opacity:0;animation:rise 2s ease-out .3s forwards}
 .entry-quote{font-style:italic;font-weight:300;font-size:clamp(1.5rem,3.5vw,2.6rem);line-height:1.8;max-width:90vw;color:var(--ink);opacity:0;animation:rise 3s ease-out 1.2s forwards;padding:0 1rem;word-break:keep-all;overflow-wrap:break-word}
 .entry-attr{font-size:.85rem;letter-spacing:.3em;color:var(--ink-faint);margin-top:3rem;text-transform:uppercase;opacity:0;animation:rise 2s ease-out 3s forwards}
@@ -187,12 +210,17 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
 
 <!-- SCENE 1: ENTRY -->
 <section class="scene active" id="scene1">
-  <div class="title-mark">Mark Rothko · 1903–1970</div>
-  <div class="entry-quote">"나는 색이 아니라<br>비극, 황홀, 운명을 그린다."</div>
-  <div class="entry-attr">— Rothko, 1956</div>
-  <div class="entry-btns">
-    <button class="entry-btn" onclick="goToScene(2)">📖 로스코 이야기</button>
-    <button class="entry-btn" onclick="goToScene(3)">🎨 색 앞에 서기</button>
+  <img class="intro-quote-img" src="images/rothko_quote_v2.jpg" alt="나는 색이 아니라 비극, 황홀, 운명을 그린다">
+  <div class="intro-btns">
+    <button class="entry-btn" onclick="goToScene(2)">로스코 이야기</button>
+    <button class="entry-btn intro-btn-accent" onclick="goToScene(3)">색 앞에 서기</button>
+  </div>
+  <div class="intro-chips">
+    <div class="intro-chip card-1"><div class="chip-field"><div class="ctop"></div><div class="cbottom"></div></div><span class="chip-phrase">유예가 허락되지 않은<br>시간성</span><span class="chip-detail">시간의 무게<br>기다릴 수 없는 압박</span></div>
+    <div class="intro-chip card-2"><div class="chip-field"><div class="ctop"></div><div class="cbottom"></div></div><span class="chip-phrase">어둠을 투과하는<br>노란 온기</span><span class="chip-detail">절망 속에서도<br>스며드는 따뜻함</span></div>
+    <div class="intro-chip card-3"><div class="chip-field"><div class="ctop"></div><div class="cbottom"></div></div><span class="chip-phrase">흐릿한 회색의 장막</span><span class="chip-detail">불확실함<br>앞이 보이지 않는 안개</span></div>
+    <div class="intro-chip card-4"><div class="chip-field"><div class="ctop"></div><div class="cbottom"></div></div><span class="chip-phrase">채도가 소거된 시간</span><span class="chip-detail">색이 빠진 일상<br>무기력한 반복</span></div>
+    <div class="intro-chip card-5"><div class="chip-field"><div class="ctop"></div><div class="cbottom"></div></div><span class="chip-phrase">훼손되지 않은<br>고유함의 방어선</span><span class="chip-detail">지켜야 할<br>나만의 본질</span></div>
   </div>
 </section>
 
