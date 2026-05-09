@@ -117,7 +117,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none!important;-we
 .reflection-input:focus{border-color:var(--ink-dim)}
 .whisper{position:absolute;top:4rem;left:4rem;max-width:280px;font-style:italic;font-size:.95rem;line-height:1.6;color:var(--ink-dim);opacity:0;transition:opacity 2s ease}
 .whisper.visible{opacity:.7}
-.next-prompt{position:relative;margin-top:1.5rem;font-size:.7rem;letter-spacing:.5em;color:var(--ink-faint);text-transform:uppercase;cursor:pointer;padding:.8rem 1.5rem;opacity:0;transition:color .6s,opacity 1s;background:rgba(0,0,0,.45);border-radius:2rem;backdrop-filter:blur(4px);display:inline-block}.next-prompt.visible{opacity:1}.next-prompt:hover{color:#fff;background:rgba(0,0,0,.6)}
+.next-prompt{position:absolute;bottom:4rem;left:50%;transform:translateX(-50%);z-index:10;font-size:1.4rem;letter-spacing:.5em;color:var(--ink-faint);text-transform:uppercase;cursor:pointer;padding:1.6rem 3rem;opacity:0;transition:color .6s,opacity 1s;background:rgba(0,0,0,.55);border-radius:2rem;backdrop-filter:blur(4px);display:inline-block}.next-prompt.visible{opacity:1}.next-prompt:hover{color:#fff;background:rgba(0,0,0,.7)}
 
 /* === SCENE 5: INSIGHT === */
 #scene5{flex-direction:column;padding:4rem 2rem}
