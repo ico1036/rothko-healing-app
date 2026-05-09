@@ -6,27 +6,19 @@
 <title>로스코 인트로</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-/* ===== Design System: Apple Premium + Dark ===== */
 :root {
   --bg: #0a0a0a;
   --text: #f5f0eb;
-  --text-muted: rgba(245,240,235,0.5);
-  --text-shadow: 0 2px 16px rgba(0,0,0,0.9), 0 0 40px rgba(0,0,0,0.5);
-  --radius: 4px;
+  --text-shadow: 0 2px 20px rgba(0,0,0,0.95), 0 0 50px rgba(0,0,0,0.6);
   --font: 'Noto Serif KR', serif;
 }
 
-/* 한국어 필수 (design-system 규칙) */
 body {
   word-break: keep-all;
   overflow-wrap: break-word;
   letter-spacing: -0.02em;
   line-height: 1.65;
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
+  margin: 0; padding: 0; box-sizing: border-box;
   background: var(--bg);
   color: var(--text);
   font-family: var(--font);
@@ -38,16 +30,12 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ===== 레이아웃 ===== */
-/* 8px 기반 간격: gap=16px, padding=48px/24px */
 .intro-container {
   display: flex;
   gap: 16px;
   max-width: 1100px;
 }
 
-/* ===== 카드 ===== */
-/* 터치 타겟 ≥ 44px (Fitts's Law) */
 .intro-card {
   aspect-ratio: 3 / 4;
   width: 180px;
@@ -56,80 +44,65 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border-radius: var(--radius);
+  border-radius: 2px;
   flex-shrink: 0;
-  min-height: 240px;
 }
 
-/* ===== 로스코 색면 ===== */
-.color-field {
+/* ===== 로스코 색면: 단일 캔버스에 그라디언트로 번짐 재현 ===== */
+.rothko-field {
   position: absolute;
   inset: 0;
-  display: flex;
-  flex-direction: column;
-  padding: 12px;
-  gap: 0; /* 면 사이 간격 없음 — 블렌드로 처리 */
+  /* 기본 배경색 = 캔버스 톤 */
 }
 
-.color-block {
-  border-radius: 2px;
-  position: relative;
-}
-
-.color-block.top { flex: 1; }
-.color-block.bottom { flex: 0.75; }
-
-/* 블렌드 오버레이 — 경계를 부드럽게 */
-.color-blend {
+/* 위쪽 색면: 위에서 중간까지, 아래로 갈수록 투명해짐 */
+.color-top {
   position: absolute;
-  left: 0; right: 0;
-  height: 50px;
-  pointer-events: none;
-  z-index: 1;
+  top: 8%;
+  left: 7%;
+  right: 7%;
+  height: 42%;
+  filter: blur(8px);
+  border-radius: 2px;
+}
+
+/* 아래쪽 색면: 중간에서 아래까지, 위로 갈수록 투명해짐 */
+.color-bottom {
+  position: absolute;
+  bottom: 8%;
+  left: 7%;
+  right: 7%;
+  height: 35%;
+  filter: blur(8px);
+  border-radius: 2px;
 }
 
 /* --- 카드 1: 유예가 허락되지 않은 시간성 --- */
-.card-1 .top { background: linear-gradient(180deg, #1a1208 0%, #2d1f0e 60%, #15100a 100%); }
-.card-1 .bottom { background: linear-gradient(180deg, #3d2a12 0%, #1a1208 100%); }
-.card-1 .color-blend {
-  bottom: -25px;
-  background: linear-gradient(180deg, transparent, rgba(29,21,10,0.6), transparent);
-}
+.card-1 .rothko-field { background: #0d0a05; }
+.card-1 .color-top { background: linear-gradient(180deg, #2d1f0e 0%, #1a1208 60%, rgba(26,18,8,0) 100%); }
+.card-1 .color-bottom { background: linear-gradient(0deg, #3d2a12 0%, #2d1f0e 40%, rgba(45,31,14,0) 100%); }
 
 /* --- 카드 2: 어둠을 투과하는 노란 온기 --- */
-.card-2 .top { background: linear-gradient(180deg, #c4952a 0%, #d4a83a 40%, #8a6518 100%); }
-.card-2 .bottom { background: linear-gradient(180deg, #2a1c08 0%, #1a1208 100%); }
-.card-2 .color-blend {
-  bottom: -25px;
-  background: linear-gradient(180deg, transparent, rgba(60,42,15,0.7), transparent);
-}
+.card-2 .rothko-field { background: #1a1208; }
+.card-2 .color-top { background: linear-gradient(180deg, #c4952a 0%, #d4a83a 40%, rgba(180,130,30,0) 100%); }
+.card-2 .color-bottom { background: linear-gradient(0deg, #2a1c08 0%, #1f1508 30%, rgba(26,18,8,0) 100%); }
 
 /* --- 카드 3: 흐릿한 회색의 장막 --- */
-.card-3 .top { background: linear-gradient(180deg, #3e3e46 0%, #5a5a64 50%, #353540 100%); }
-.card-3 .bottom { background: linear-gradient(180deg, #4a4a55 0%, #28282f 100%); }
-.card-3 .color-blend {
-  bottom: -25px;
-  background: linear-gradient(180deg, transparent, rgba(50,50,58,0.6), transparent);
-}
+.card-3 .rothko-field { background: #28282f; }
+.card-3 .color-top { background: linear-gradient(180deg, #5a5a64 0%, #4a4a52 50%, rgba(74,74,82,0) 100%); }
+.card-3 .color-bottom { background: linear-gradient(0deg, #4a4a55 0%, #3e3e46 30%, rgba(62,62,70,0) 100%); }
 
 /* --- 카드 4: 채도가 소거된 시간 --- */
-.card-4 .top { background: linear-gradient(180deg, #7a7570 0%, #a09a94 50%, #5a5550 100%); }
-.card-4 .bottom { background: linear-gradient(180deg, #4a4540 0%, #2e2a28 100%); }
-.card-4 .color-blend {
-  bottom: -25px;
-  background: linear-gradient(180deg, transparent, rgba(55,50,45,0.6), transparent);
-}
+.card-4 .rothko-field { background: #2e2a28; }
+.card-4 .color-top { background: linear-gradient(180deg, #a09a94 0%, #8a8580 50%, rgba(138,133,128,0) 100%); }
+.card-4 .color-bottom { background: linear-gradient(0deg, #5a5550 0%, #4a4540 30%, rgba(74,69,64,0) 100%); }
 
 /* --- 카드 5: 훼손되지 않는 고유함의 방어선 --- */
-.card-5 .top { background: linear-gradient(180deg, #7a1818 0%, #982828 50%, #501010 100%); }
-.card-5 .bottom { background: linear-gradient(180deg, #301210 0%, #1a0a08 100%); }
-.card-5 .color-blend {
-  bottom: -25px;
-  background: linear-gradient(180deg, transparent, rgba(40,15,12,0.7), transparent);
-}
+.card-5 .rothko-field { background: #1a0a08; }
+.card-5 .color-top { background: linear-gradient(180deg, #982828 0%, #7a1818 50%, rgba(122,24,24,0) 100%); }
+.card-5 .color-bottom { background: linear-gradient(0deg, #301210 0%, #25100a 30%, rgba(37,16,10,0) 100%); }
 
 /* ===== 텍스트 ===== */
-/* 타이포 3-weight: phrase=400, detail=300 */
 .phrase {
   position: relative;
   z-index: 2;
@@ -152,7 +125,7 @@ body {
   justify-content: center;
   padding: 24px 16px;
   font-size: 0.85rem;
-  font-weight: 300; /* Muted weight */
+  font-weight: 300;
   line-height: 1.8;
   color: rgba(245,240,235,0.8);
   text-shadow: var(--text-shadow);
@@ -163,31 +136,14 @@ body {
   z-index: 2;
 }
 
-/* 호버: phrase→detail 전환 (장식용 아님, 기능적 트랜지션) */
-.intro-card:hover .phrase {
-  opacity: 0;
-  transform: translateY(-8px);
-}
-.intro-card:hover .detail {
-  opacity: 1;
-  transform: translateY(0);
-}
+.intro-card:hover .phrase { opacity: 0; transform: translateY(-8px); }
+.intro-card:hover .detail { opacity: 1; transform: translateY(0); }
 
 /* ===== 모바일 ===== */
 @media (max-width: 768px) {
   body { padding: 32px 16px; align-items: flex-start; padding-top: 48px; }
-  
-  .intro-container {
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-  }
-  
-  .intro-card {
-    width: 160px;
-    min-height: 200px;
-  }
-  
+  .intro-container { flex-direction: column; align-items: center; gap: 12px; }
+  .intro-card { width: 160px; }
   .phrase { font-size: 0.82rem; padding: 12px 8px; }
   .detail { font-size: 0.78rem; padding: 16px 12px; }
 }
@@ -197,51 +153,41 @@ body {
 
 <div class="intro-container">
   <div class="intro-card card-1">
-    <div class="color-field">
-      <div class="color-block top"></div>
-      <div class="color-blend"></div>
-      <div class="color-block bottom"></div>
-    </div>
+    <div class="rothko-field"></div>
+    <div class="color-top"></div>
+    <div class="color-bottom"></div>
     <span class="phrase">유예가 허락되지 않은<br>시간성</span>
     <span class="detail">시간의 무게<br>기다릴 수 없는 압박</span>
   </div>
 
   <div class="intro-card card-2">
-    <div class="color-field">
-      <div class="color-block top"></div>
-      <div class="color-blend"></div>
-      <div class="color-block bottom"></div>
-    </div>
+    <div class="rothko-field"></div>
+    <div class="color-top"></div>
+    <div class="color-bottom"></div>
     <span class="phrase">어둠을 투과하는<br>노란 온기</span>
     <span class="detail">절망 속에서도<br>스며드는 따뜻함</span>
   </div>
 
   <div class="intro-card card-3">
-    <div class="color-field">
-      <div class="color-block top"></div>
-      <div class="color-blend"></div>
-      <div class="color-block bottom"></div>
-    </div>
+    <div class="rothko-field"></div>
+    <div class="color-top"></div>
+    <div class="color-bottom"></div>
     <span class="phrase">흐릿한 회색의 장막</span>
     <span class="detail">불확실함<br>앞이 보이지 않는 안개</span>
   </div>
 
   <div class="intro-card card-4">
-    <div class="color-field">
-      <div class="color-block top"></div>
-      <div class="color-blend"></div>
-      <div class="color-block bottom"></div>
-    </div>
+    <div class="rothko-field"></div>
+    <div class="color-top"></div>
+    <div class="color-bottom"></div>
     <span class="phrase">채도가 소거된 시간</span>
     <span class="detail">색이 빠진 일상<br>무기력한 반복</span>
   </div>
 
   <div class="intro-card card-5">
-    <div class="color-field">
-      <div class="color-block top"></div>
-      <div class="color-blend"></div>
-      <div class="color-block bottom"></div>
-    </div>
+    <div class="rothko-field"></div>
+    <div class="color-top"></div>
+    <div class="color-bottom"></div>
     <span class="phrase">훼손되지 않은<br>고유함의 방어선</span>
     <span class="detail">지켜야 할<br>나만의 본질</span>
   </div>
