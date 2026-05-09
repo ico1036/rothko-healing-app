@@ -13,26 +13,27 @@ body {
   font-family: 'Noto Serif KR', serif;
   overflow: hidden;
   height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .intro-container {
   display: flex;
-  height: 100vh;
-  width: 100vw;
+  gap: 12px;
+  height: 85vh;
+  padding: 0 2rem;
 }
 
 .intro-card {
-  flex: 1;
+  aspect-ratio: 3 / 4;
+  height: 100%;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  transition: flex 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.intro-card:hover {
-  flex: 1.4;
+  border-radius: 2px;
 }
 
 .intro-card .color-field {
@@ -44,14 +45,14 @@ body {
 
 .intro-card .color-field .top-block {
   flex: 1;
-  margin: 6% 5% 2% 5%;
-  border-radius: 4px;
+  margin: 8% 7% 3% 7%;
+  border-radius: 3px;
 }
 
 .intro-card .color-field .bottom-block {
   flex: 0.8;
-  margin: 2% 5% 6% 5%;
-  border-radius: 4px;
+  margin: 3% 7% 8% 7%;
+  border-radius: 3px;
 }
 
 /* 카드 1: 유예가 허락되지 않은 시간성 */
@@ -94,29 +95,76 @@ body {
   background: linear-gradient(180deg, #3d1510 0%, #1a0a08 100%);
 }
 
-/* 텍스트 */
-.intro-card .phrase {
+/* 텍스트 레이어 */
+.intro-card .text-layer {
   position: relative;
   z-index: 2;
   text-align: center;
-  padding: 2rem 1.5rem;
-  font-size: 1.15rem;
+  padding: 2rem 1.2rem;
+}
+
+.intro-card .phrase {
+  font-size: 1.05rem;
   font-weight: 400;
   line-height: 1.7;
   letter-spacing: -0.02em;
   color: #f5f0eb;
-  text-shadow: 0 2px 20px rgba(0,0,0,0.9), 0 0 40px rgba(0,0,0,0.6);
+  text-shadow: 0 2px 16px rgba(0,0,0,0.85), 0 0 30px rgba(0,0,0,0.5);
+  transition: opacity 0.4s, transform 0.4s;
+}
+
+.intro-card .detail {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 300;
+  line-height: 1.8;
+  letter-spacing: 0.01em;
+  color: rgba(245, 240, 235, 0.85);
+  text-shadow: 0 2px 16px rgba(0,0,0,0.9);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s 0.1s, transform 0.4s 0.1s;
+  text-align: center;
+}
+
+.intro-card:hover .phrase {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.intro-card:hover .detail {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* 모바일 */
 @media (max-width: 768px) {
   .intro-container {
     flex-direction: column;
+    gap: 8px;
+    height: auto;
+    padding: 1rem;
+  }
+  
+  .intro-card {
+    aspect-ratio: auto;
+    height: 18vh;
+    width: 100%;
   }
   
   .intro-card .phrase {
-    font-size: 1rem;
-    padding: 1.5rem 2rem;
+    font-size: 0.9rem;
+    padding: 0;
+  }
+  
+  .intro-card .detail {
+    font-size: 0.85rem;
+    padding: 1rem;
   }
 }
 </style>
@@ -131,6 +179,7 @@ body {
       <div class="bottom-block"></div>
     </div>
     <span class="phrase">유예가 허락되지 않은 시간성</span>
+    <span class="detail">시간의 무게<br>기다릴 수 없는 압박</span>
   </div>
 
   <div class="intro-card card-2">
@@ -139,6 +188,7 @@ body {
       <div class="bottom-block"></div>
     </div>
     <span class="phrase">어둠을 투과하는 노란 온기</span>
+    <span class="detail">절망 속에서도<br>스며드는 따뜻함</span>
   </div>
 
   <div class="intro-card card-3">
@@ -147,6 +197,7 @@ body {
       <div class="bottom-block"></div>
     </div>
     <span class="phrase">흐릿한 회색의 장막</span>
+    <span class="detail">불확실함<br>앞이 보이지 않는 안개</span>
   </div>
 
   <div class="intro-card card-4">
@@ -155,6 +206,7 @@ body {
       <div class="bottom-block"></div>
     </div>
     <span class="phrase">채도가 소거된 시간</span>
+    <span class="detail">색이 빠진 일상<br>무기력한 반복</span>
   </div>
 
   <div class="intro-card card-5">
@@ -163,6 +215,7 @@ body {
       <div class="bottom-block"></div>
     </div>
     <span class="phrase">훼손되지 않는 고유함의 방어선</span>
+    <span class="detail">지켜야 할<br>나만의 본질</span>
   </div>
 </div>
 
